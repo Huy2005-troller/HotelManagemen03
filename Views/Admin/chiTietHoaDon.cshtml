@@ -1,0 +1,181 @@
+﻿@model HoaDon
+@{
+    ViewBag.Title = "Chi tiết hóa đơn";
+
+    // Khai báo & xử lý dữ liệu đầu trang để dùng trong toàn bộ file
+    float tienphong = Model.MaOrderPhongNavigation.MaPhongNavigation.MaLoaiPhongNavigation.GiaPhong;
+    string tenphong = Model.MaOrderPhongNavigation.MaPhongNavigation.TenPhong;
+    DateTime ngayden = Convert.ToDateTime(Model.MaOrderPhongNavigation.NgayDen);
+    DateTime ngaydi = Convert.ToDateTime(Model.MaOrderPhongNavigation.NgayDi);
+    int totalDays = Convert.ToInt32((ngaydi - ngayden).TotalDays);
+    float tongtienphong = totalDays * tienphong;
+
+    float tongtiendichvu = 0;
+    foreach (var dv in Model.MaOrderPhongNavigation.OrderPhongDichVus)
+    {
+        tongtiendichvu += Convert.ToSingle(dv.SoLuong * dv.DonGia);
+    }
+
+    float tienDoHong = 0;
+    if (Model.HoaDonDoHongs != null && Model.HoaDonDoHongs.Any())
+    {
+        tienDoHong = Model.HoaDonDoHongs.Sum(d => d.ThanhTien);
+    }
+
+    float tongTruocThue = tongtienphong + tongtiendichvu + tienDoHong;
+    float thueVAT = tongTruocThue * 0.1f;
+    float tongSauThue = tongTruocThue + thueVAT;
+}
+
+<h1 class="text-center bg-primary">Chi tiết hóa đơn</h1>
+<div class="container" id="data">
+    <div class="row">
+        <h2>@tenphong - @String.Format("{0:N0}", tienphong)</h2>
+        <div class="row">
+            <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12">
+                <h2>Ngày đến : @ngayden.ToString("dd/MM/yyyy")</h2>
+                <h2>Ngày đi : @ngaydi.ToString("dd/MM/yyyy")</h2>
+            </div>
+            <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12">
+                <h2>Số ngày : @totalDays</h2>
+                <h2>Tổng tiền phòng : @String.Format("{0:N0}", tongtienphong)</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12 p-5" style="border: 1px solid black">
+                <form class="form-group">
+                    <label class="form-label">Họ và tên</label>
+                    <input class="form-control" disabled value="@Model.MaOrderPhongNavigation.Person.HoTen" />
+
+                    <label class="form-label">Tuổi</label>
+                    <input class="form-control" disabled value="@Model.MaOrderPhongNavigation.Person.Tuoi" />
+
+                    <label class="form-label">Giới tính</label>
+                    <input class="form-control" disabled value="@(@Model.MaOrderPhongNavigation.Person.GioiTinh == 0 ? "Nam" : "Nữ")" />
+
+                    <label class="form-label">CCCD</label>
+                    <input class="form-control" disabled value="@Model.MaOrderPhongNavigation.Person.PersonId" />
+
+                    <label class="form-label">SĐT</label>
+                    <input class="form-control" disabled value="@Model.MaOrderPhongNavigation.Person.Sdt" />
+                </form>
+            </div>
+
+            <div class="col-xxl-6 col-xl-6 col-md-6 col-sm-12 col-12" style="border: 1px solid black">
+                <h4 class="text-center mb-3">Chi tiết dịch vụ</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên dịch vụ</th>
+                            <th>Giá dịch vụ</th>
+                            <th>Số lượng</th>
+                            <th>Tổng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 1;
+                            foreach (var dv in Model.MaOrderPhongNavigation.OrderPhongDichVus)
+                            {
+                                <tr>
+                                    <td>@(i++)</td>
+                                    <td>@dv.MaDichVuNavigation.TenDichVu</td>
+                                    <td>@String.Format("{0:N0}", dv.DonGia)</td>
+                                    <td>@dv.SoLuong</td>
+                                    <td>@String.Format("{0:N0}", dv.SoLuong * dv.DonGia)</td>
+                                </tr>
+                            }
+                        }
+
+                        <tr>
+                            <th class="text-center" colspan="4">Tổng tiền dịch vụ</th>
+                            <th>@String.Format("{0:N0}", tongtiendichvu)</th>
+                        </tr>
+                        <tr>
+                            <th class="text-center" colspan="4">Tổng tiền phòng</th>
+                            <th>@String.Format("{0:N0}", tongtienphong)</th>
+                        </tr>
+
+                        @if (tienDoHong > 0)
+                        {
+                            <tr>
+                                <th class="text-center" colspan="4">Tổng tiền đồ hỏng</th>
+                                <th>@String.Format("{0:N0}", tienDoHong)</th>
+                            </tr>
+                        }
+
+                        <tr>
+                            <th class="text-center" colspan="4">Tổng trước thuế</th>
+                            <th>@String.Format("{0:N0}", tongTruocThue)</th>
+                        </tr>
+
+                        <tr>
+                            <th class="text-center" colspan="4">Thuế VAT (10%)</th>
+                            <th>@String.Format("{0:N0}", thueVAT)</th>
+                        </tr>
+
+                        <tr>
+                            <th class="text-center" colspan="4">Tổng cộng (sau thuế)</th>
+                            <th>@String.Format("{0:N0}", tongSauThue)</th>
+                        </tr>
+                    </tbody>
+                </table>
+
+                @if (Model.HoaDonDoHongs != null && Model.HoaDonDoHongs.Any())
+                {
+                    <h4 class="text-center mb-3 mt-4">Chi tiết đồ hỏng</h4>
+                    <table class="table table-warning">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên đồ hỏng</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int j = 1;
+                                foreach (var doHong in Model.HoaDonDoHongs)
+                                {
+                                    <tr>
+                                        <td>@(j++)</td>
+                                        <td>@doHong.TenDoHong</td>
+                                        <td>@doHong.SoLuong</td>
+                                        <td>@String.Format("{0:N0}", doHong.DonGia)</td>
+                                        <td>@String.Format("{0:N0}", doHong.ThanhTien)</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                <div class="float-end mt-1">
+                    <button class="btn btn-dark" onclick="inHoaDon()">In hóa đơn</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function inHoaDon() {
+            var data = document.getElementById('data');
+            var dataBackUp = data.innerHTML;
+            var dataRemoveSomeElements = data.querySelectorAll('div.float-end.mt-1');
+
+            dataRemoveSomeElements.forEach((div) => {
+                div.parentNode.removeChild(div);
+            });
+
+            window.print();
+
+            data.innerHTML = dataBackUp;
+        }
+    </script>
+}

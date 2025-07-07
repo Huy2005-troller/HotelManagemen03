@@ -1,0 +1,543 @@
+﻿@model HotelManagement.ViewModels.ThanhToanViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Thanh toán";
+    var tongTienPhong = 0f;
+    if (Model.Order != null)
+    {
+        var ngayden = Model.Order.NgayDen;
+        var ngaydi = Model.Order.NgayDi;
+        int soNgay = (ngaydi - ngayden)?.Days ?? 0;
+
+        tongTienPhong = Model.Order.MaPhongNavigation.MaLoaiPhongNavigation.GiaPhong * soNgay;
+    }
+}
+
+@if (Model.Order == null)
+{
+    <h1 class="text-center bg-primary">Phòng đã thanh toán</h1>
+}
+else
+{
+    <div class="container" id="data">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        <h2>@Model.Order.MaPhongNavigation.TenPhong - @String.Format("{0:N0}", Model.Order.MaPhongNavigation.MaLoaiPhongNavigation.GiaPhong)</h2>
+        <p>Ngày đến: @Model.Order.NgayDen?.ToString("dd/MM/yyyy")</p>
+        <p>Ngày đi: @Model.Order.NgayDi?.ToString("dd/MM/yyyy")</p>
+        <p>Số ngày: @((Model.Order.NgayDi.GetValueOrDefault() - Model.Order.NgayDen.GetValueOrDefault()).Days)</p>
+
+
+        <p>Tổng tiền phòng: @String.Format("{0:N0}", tongTienPhong)</p>
+
+        <form method="post" asp-action="updateThanhToan" asp-controller="Room" onsubmit="return validateAndUpdateForm(this)" id="thanhToanForm">
+            <input type="hidden" name="maorder" value="@Model.Order.MaOrderPhong" />
+            <input type="hidden" name="maphong" value="@Model.Order.MaPhong" />
+
+            <table class="table" id="dichVuTable">
+                <thead>
+                    <tr>
+                        <th>Chọn</th>
+                        <th>Tên dịch vụ</th>
+                        <th>Giá dịch vụ</th>
+                        <th>Số lượng</th>
+                        <th>Tổng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var dv in Model.AllDichVus)
+                    {
+                        var existing = Model.Order.OrderPhongDichVus.FirstOrDefault(x => x.MaDichVu == dv.MaDichVu);
+                        var isChecked = existing != null;
+                        var quantity = existing?.SoLuong ?? 1;
+                        <tr>
+                            <td><input type="checkbox" class="checkbox" data-gia="@dv.GiaDichVu" name="isSelected" @(isChecked ? "checked" : "") /></td>
+                            <td class="madichvu" data-madichvu="@dv.MaDichVu">@dv.TenDichVu</td>
+                            <td>@String.Format("{0:N0}", dv.GiaDichVu)</td>
+                            <td><input type="number" class="form-control quantity" data-gia="@dv.GiaDichVu" name="quantities" value="@quantity" min="0" max="999" /></td>
+                            <td class="total">@(isChecked ? String.Format("{0:N0}", dv.GiaDichVu * quantity) : "0")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <input type="hidden" name="selectedServiceIds" id="selectedServiceIds" />
+            <input type="hidden" name="servicePrice" id="servicePrice" />
+            <input type="hidden" name="selectedQuantities" id="selectedQuantities" />
+            <input type="hidden" name="doHongData" id="doHongData" value="" />
+
+            <div class="tongTien">Tổng tiền dịch vụ: 0</div>
+            
+            <!-- Phần đồ hỏng -->
+            <div class="mt-4">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Đồ bị hỏng</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label for="soLuongDoHong" class="form-label">Số lượng đồ hỏng:</label>
+                                <input type="number" id="soLuongDoHong" class="form-control" min="0" max="10" value="0" />
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-warning mt-4" onclick="taoSlotDoHong()">
+                                    <i class="fas fa-plus"></i> Tạo danh sách
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="danhSachDoHong" class="mb-3">
+                            <!-- Các slot đồ hỏng sẽ được tạo ở đây -->
+                        </div>
+                        
+                        <div class="tongTienDoHong fw-bold text-warning">Tổng tiền đồ hỏng: 0 VNĐ</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Phần tổng tiền và thuế -->
+            <div class="mt-4">
+                <div class="card border-info">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-calculator"></i> Tổng kết thanh toán</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <span class="fw-bold">Tiền phòng:</span>
+                                    <span class="tienPhong text-primary">0 VNĐ</span>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="fw-bold">Tiền dịch vụ:</span>
+                                    <span class="tienDichVu text-primary">0 VNĐ</span>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="fw-bold">Tiền đồ hỏng:</span>
+                                    <span class="tienDoHong text-warning">0 VNĐ</span>
+                                </div>
+                                <div class="mb-2 border-top pt-2">
+                                    <span class="fw-bold">Tổng trước thuế:</span>
+                                    <span class="tongTruocThue text-success">0 VNĐ</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <span class="fw-bold">Thuế VAT (10%):</span>
+                                    <span class="thueVAT text-danger">0 VNĐ</span>
+                                </div>
+                                <div class="mb-2 border-top pt-2">
+                                    <span class="fw-bold fs-5">Tổng sau thuế:</span>
+                                    <span class="tongSauThue text-primary fs-5">0 VNĐ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="totalAll fw-bold fs-5 text-primary mt-3">Tổng tất cả: 0</div>
+
+            <button type="submit" class="btn btn-success">Lưu chỉnh sửa</button>
+            <a class="btn btn-primary" asp-action="addHoadon" asp-route-maorder="@Model.Order.MaOrderPhong" asp-route-tongtien="@(tongTienPhong)" asp-route-maphong="@Model.Order.MaPhong" id="btnThanhToan">Xác nhận thanh toán</a>
+        </form>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function validateAndUpdateForm(form) {
+            // Kiểm tra xem có ít nhất một dịch vụ được chọn không
+            var checkedBoxes = form.querySelectorAll('.checkbox:checked');
+            var hasValidService = false;
+            
+            for (var checkbox of checkedBoxes) {
+                var row = checkbox.closest('tr');
+                var quantity = row.querySelector('.quantity');
+                var qty = parseInt(quantity.value) || 0;
+                if (qty > 0) {
+                    hasValidService = true;
+                    break;
+                }
+            }
+            
+            if (!hasValidService) {
+                alert('Vui lòng chọn ít nhất một dịch vụ với số lượng lớn hơn 0!');
+                return false;
+            }
+
+            // Kiểm tra số lượng của các dịch vụ được chọn
+            for (var checkbox of checkedBoxes) {
+                var row = checkbox.closest('tr');
+                var quantity = row.querySelector('.quantity');
+                var qty = parseInt(quantity.value) || 0;
+                if (qty < 0) {
+                    alert('Số lượng dịch vụ phải lớn hơn hoặc bằng 0!');
+                    quantity.focus();
+                    return false;
+                }
+            }
+
+            // Kiểm tra đồ hỏng
+            var doHongInputs = form.querySelectorAll('.tenDoHong');
+            for (var input of doHongInputs) {
+                var ten = input.value.trim();
+                var index = input.getAttribute('data-index');
+                var soLuong = parseInt(form.querySelector(`.soLuongDoHong[data-index="${index}"]`).value) || 0;
+                var donGia = parseFloat(form.querySelector(`.donGiaDoHong[data-index="${index}"]`).value) || 0;
+                
+                if (ten && (soLuong <= 0 || donGia < 0)) {
+                    alert('Vui lòng nhập đầy đủ thông tin đồ hỏng!');
+                    return false;
+                }
+            }
+
+            var result = updateSelectedData(form);
+            console.log('Form validation result:', result);
+            return result;
+        }
+
+        function updateSelectedData(form) {
+            var serviceIds = [];
+            var servicePrice = [];
+            var selectedQuantities = [];
+
+            var rows = form.querySelectorAll("#dichVuTable tbody tr");
+
+            for (var row of rows) {
+                var checkbox = row.querySelector(".checkbox");
+                var quantity = row.querySelector(".quantity");
+                var madichvu = row.querySelector(".madichvu");
+                if (checkbox.checked) {
+                    var qty = parseInt(quantity.value) || 0;
+                    if (qty > 0) {
+                        serviceIds.push(madichvu.getAttribute("data-madichvu"));
+                        servicePrice.push(checkbox.getAttribute("data-gia"));
+                        selectedQuantities.push(qty);
+                    }
+                }
+            }
+
+            form.querySelector("#selectedServiceIds").value = serviceIds.join(',');
+            form.querySelector("#servicePrice").value = servicePrice.join(',');
+            form.querySelector("#selectedQuantities").value = selectedQuantities.join(',');
+            
+            // Debug: Log dữ liệu trước khi submit
+            console.log('Dữ liệu dịch vụ:', {
+                serviceIds: serviceIds,
+                servicePrice: servicePrice,
+                selectedQuantities: selectedQuantities
+            });
+            
+            return true;
+        }
+
+        function calculateTotals() {
+            let tongDichVu = 0;
+            document.querySelectorAll('#dichVuTable tbody tr').forEach(row => {
+                var checkbox = row.querySelector('.checkbox');
+                var quantity = parseInt(row.querySelector('.quantity').value) || 0;
+                var price = parseFloat(checkbox.getAttribute('data-gia'));
+                var total = checkbox.checked ? quantity * price : 0;
+                
+                // Kiểm tra giá trị hợp lệ
+                if (isNaN(total) || total < 0) {
+                    total = 0;
+                }
+                
+                row.querySelector('.total').textContent = total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                tongDichVu += total;
+            });
+
+            // Tính tổng tiền đồ hỏng
+            let tongDoHong = 0;
+            document.querySelectorAll('.soLuongDoHong').forEach(input => {
+                var index = input.getAttribute('data-index');
+                var soLuong = parseInt(input.value) || 0;
+                var donGia = parseFloat(document.querySelector(`.donGiaDoHong[data-index="${index}"]`).value) || 0;
+                tongDoHong += soLuong * donGia;
+            });
+
+            let tienPhong = parseFloat("@tongTienPhong") || 0;
+            let tongTatCa = tongDichVu + tienPhong + tongDoHong;
+            
+            // Kiểm tra tổng tiền hợp lệ
+            if (isNaN(tongTatCa) || tongTatCa < 0) {
+                tongTatCa = 0;
+            }
+            
+            document.querySelector('.tongTien').textContent = "Tổng tiền dịch vụ: " + tongDichVu.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.tongTienDoHong').textContent = "Tổng tiền đồ hỏng: " + tongDoHong.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.totalAll').textContent = "Tổng tất cả: " + tongTatCa.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            
+            // Cập nhật giá trị cho nút thanh toán
+            var btnThanhToan = document.getElementById('btnThanhToan');
+            if (btnThanhToan) {
+                var currentHref = btnThanhToan.getAttribute('href');
+                var baseUrl = currentHref.split('?')[0];
+                var newHref = baseUrl + '?maorder=@Model.Order.MaOrderPhong&tongtien=' + tongTatCa + '&maphong=@Model.Order.MaPhong';
+                btnThanhToan.setAttribute('href', newHref);
+            }
+
+            // Lưu dữ liệu đồ hỏng vào hidden field
+            saveDoHongData();
+        }
+
+        // Tính toán ban đầu
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateTotals();
+            console.log('DOM loaded, tính toán ban đầu hoàn tất');
+            
+            // Debug form submit
+            document.getElementById('thanhToanForm').addEventListener('submit', function(e) {
+                console.log('Form đang submit...');
+                console.log('Form data:', new FormData(this));
+            });
+        });
+
+        // Tính toán khi có thay đổi
+        document.querySelectorAll('.quantity, .checkbox').forEach(el => {
+            el.addEventListener('input', calculateTotals);
+            el.addEventListener('change', calculateTotals);
+        });
+
+        // Validation cho input số lượng
+        document.querySelectorAll('.quantity').forEach(input => {
+            input.addEventListener('blur', function() {
+                var value = parseInt(this.value) || 0;
+                if (value < 0) {
+                    this.value = 0;
+                    calculateTotals();
+                } else if (value > 999) {
+                    this.value = 999;
+                    calculateTotals();
+                }
+            });
+        });
+
+        // Validation cho input đồ hỏng
+        document.addEventListener('blur', function(e) {
+            if (e.target.classList.contains('soLuongDoHong')) {
+                var value = parseInt(e.target.value) || 0;
+                if (value < 1) {
+                    e.target.value = 1;
+                    calculateTotals();
+                } else if (value > 999) {
+                    e.target.value = 999;
+                    calculateTotals();
+                }
+            }
+            if (e.target.classList.contains('donGiaDoHong')) {
+                var value = parseFloat(e.target.value) || 0;
+                if (value < 0) {
+                    e.target.value = 0;
+                    calculateTotals();
+                } else if (value > 10000000) {
+                    e.target.value = 10000000;
+                    calculateTotals();
+                }
+            }
+        }, true);
+
+        // Hàm tạo slot đồ hỏng
+        function taoSlotDoHong() {
+            var soLuong = parseInt(document.getElementById('soLuongDoHong').value) || 0;
+            var container = document.getElementById('danhSachDoHong');
+            container.innerHTML = '';
+
+            if (soLuong <= 0) {
+                alert('Vui lòng nhập số lượng đồ hỏng lớn hơn 0!');
+                return;
+            }
+
+            if (soLuong > 10) {
+                alert('Số lượng đồ hỏng không được vượt quá 10!');
+                document.getElementById('soLuongDoHong').value = 10;
+                soLuong = 10;
+            }
+
+            // Tạo header cho bảng đồ hỏng
+            var headerRow = document.createElement('div');
+            headerRow.className = 'row mb-2 fw-bold text-muted';
+            headerRow.innerHTML = `
+                <div class="col-md-4">Tên đồ hỏng</div>
+                <div class="col-md-2">Số lượng</div>
+                <div class="col-md-3">Đơn giá (VNĐ)</div>
+                <div class="col-md-2">Thành tiền</div>
+                <div class="col-md-1">Thao tác</div>
+            `;
+            container.appendChild(headerRow);
+
+            for (var i = 0; i < soLuong; i++) {
+                var row = document.createElement('div');
+                row.className = 'row mb-2 align-items-center border-bottom pb-2';
+                row.innerHTML = `
+                    <div class="col-md-4">
+                        <input type="text" class="form-control tenDoHong" placeholder="Tên đồ hỏng" data-index="${i}" />
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control soLuongDoHong" placeholder="Số lượng" min="1" value="1" data-index="${i}" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" class="form-control donGiaDoHong" placeholder="Đơn giá" min="0" value="0" data-index="${i}" />
+                    </div>
+                    <div class="col-md-2">
+                        <span class="thanhTienDoHong fw-bold text-danger" data-index="${i}">0 VNĐ</span>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="xoaSlotDoHong(${i})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(row);
+            }
+
+            // Thêm event listeners cho các input mới
+            addDoHongEventListeners();
+            calculateTotals();
+        }
+
+        // Thêm event listeners cho đồ hỏng
+        function addDoHongEventListeners() {
+            document.querySelectorAll('.tenDoHong, .soLuongDoHong, .donGiaDoHong').forEach(input => {
+                input.addEventListener('input', function() {
+                    calculateDoHongTotal(this);
+                    calculateTotals();
+                });
+            });
+        }
+
+        // Xóa slot đồ hỏng
+        function xoaSlotDoHong(index) {
+            var container = document.getElementById('danhSachDoHong');
+            var rows = container.querySelectorAll('.row');
+            // Bỏ qua header (index 0)
+            var dataRowIndex = index + 1;
+            if (rows[dataRowIndex]) {
+                rows[dataRowIndex].remove();
+                // Cập nhật lại index cho các slot còn lại
+                var remainingDataRows = container.querySelectorAll('.row:not(:first-child)');
+                remainingDataRows.forEach((row, newIndex) => {
+                    row.querySelectorAll('[data-index]').forEach(el => {
+                        el.setAttribute('data-index', newIndex);
+                    });
+                    var deleteBtn = row.querySelector('button');
+                    if (deleteBtn) {
+                        deleteBtn.setAttribute('onclick', `xoaSlotDoHong(${newIndex})`);
+                    }
+                });
+                calculateTotals();
+            }
+        }
+
+        // Tính tổng tiền đồ hỏng
+        function calculateDoHongTotal(changedInput) {
+            var index = changedInput.getAttribute('data-index');
+            var soLuong = parseInt(document.querySelector(`.soLuongDoHong[data-index="${index}"]`).value) || 0;
+            var donGia = parseFloat(document.querySelector(`.donGiaDoHong[data-index="${index}"]`).value) || 0;
+            var thanhTien = soLuong * donGia;
+            
+            document.querySelector(`.thanhTienDoHong[data-index="${index}"]`).textContent = 
+                thanhTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+        }
+
+        // Cập nhật hàm calculateTotals để bao gồm đồ hỏng và thuế VAT
+        function calculateTotals() {
+            let tongDichVu = 0;
+            document.querySelectorAll('#dichVuTable tbody tr').forEach(row => {
+                var checkbox = row.querySelector('.checkbox');
+                var quantity = parseInt(row.querySelector('.quantity').value) || 0;
+                var price = parseFloat(checkbox.getAttribute('data-gia'));
+                var total = checkbox.checked ? quantity * price : 0;
+                
+                // Kiểm tra giá trị hợp lệ
+                if (isNaN(total) || total < 0) {
+                    total = 0;
+                }
+                
+                row.querySelector('.total').textContent = total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                tongDichVu += total;
+            });
+
+            // Tính tổng tiền đồ hỏng
+            let tongDoHong = 0;
+            document.querySelectorAll('.soLuongDoHong').forEach(input => {
+                var index = input.getAttribute('data-index');
+                var soLuong = parseInt(input.value) || 0;
+                var donGia = parseFloat(document.querySelector(`.donGiaDoHong[data-index="${index}"]`).value) || 0;
+                tongDoHong += soLuong * donGia;
+            });
+
+            let tienPhong = parseFloat("@tongTienPhong") || 0;
+            let tongTruocThue = tienPhong + tongDichVu + tongDoHong;
+            let thueVAT = tongTruocThue * 0.1; // Thuế VAT 10%
+            let tongSauThue = tongTruocThue + thueVAT;
+            
+            // Kiểm tra tổng tiền hợp lệ
+            if (isNaN(tongSauThue) || tongSauThue < 0) {
+                tongSauThue = 0;
+            }
+            
+            // Cập nhật hiển thị
+            document.querySelector('.tongTien').textContent = "Tổng tiền dịch vụ: " + tongDichVu.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.tongTienDoHong').textContent = "Tổng tiền đồ hỏng: " + tongDoHong.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.tienPhong').textContent = tienPhong.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.tienDichVu').textContent = tongDichVu.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.tienDoHong').textContent = tongDoHong.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.tongTruocThue').textContent = tongTruocThue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.thueVAT').textContent = thueVAT.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.tongSauThue').textContent = tongSauThue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.totalAll').textContent = "Tổng tất cả: " + tongSauThue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            
+            // Cập nhật giá trị cho nút thanh toán
+            var btnThanhToan = document.getElementById('btnThanhToan');
+            if (btnThanhToan) {
+                var currentHref = btnThanhToan.getAttribute('href');
+                var baseUrl = currentHref.split('?')[0];
+                var newHref = baseUrl + '?maorder=@Model.Order.MaOrderPhong&tongtien=' + tongSauThue + '&maphong=@Model.Order.MaPhong';
+                btnThanhToan.setAttribute('href', newHref);
+            }
+
+            // Lưu dữ liệu đồ hỏng vào hidden field
+            saveDoHongData();
+        }
+
+        // Lưu dữ liệu đồ hỏng
+        function saveDoHongData() {
+            var doHongs = [];
+            document.querySelectorAll('.tenDoHong').forEach(input => {
+                var index = input.getAttribute('data-index');
+                var ten = input.value.trim();
+                var soLuong = parseInt(document.querySelector(`.soLuongDoHong[data-index="${index}"]`).value) || 0;
+                var donGia = parseFloat(document.querySelector(`.donGiaDoHong[data-index="${index}"]`).value) || 0;
+                
+                if (ten && soLuong > 0 && donGia >= 0) {
+                    doHongs.push({
+                        TenDoHong: ten,
+                        SoLuong: soLuong,
+                        DonGia: donGia,
+                        ThanhTien: soLuong * donGia
+                    });
+                }
+            });
+
+            // Cập nhật hidden field
+            var hiddenField = document.getElementById('doHongData');
+            if (hiddenField) {
+                hiddenField.value = JSON.stringify(doHongs);
+                console.log('Đã lưu dữ liệu đồ hỏng:', doHongs);
+                console.log('Hidden field value:', hiddenField.value);
+            } else {
+                console.error('Không tìm thấy hidden field doHongData');
+            }
+        }
+    </script>
+}

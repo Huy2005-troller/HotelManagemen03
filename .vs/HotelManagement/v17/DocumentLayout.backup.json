@@ -1,0 +1,350 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\dataaccess\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:dataaccess\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\views\\admin\\chitiethoadon.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:views\\admin\\chitiethoadon.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\views\\room\\thanhtoanthanhcong.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:views\\room\\thanhtoanthanhcong.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\views\\room\\thanhtoan.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:views\\room\\thanhtoan.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\models\\dichvu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:models\\dichvu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\models\\orderphong.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:models\\orderphong.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\viewmodels\\selecteddichvuviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:viewmodels\\selecteddichvuviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\views\\room\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:views\\room\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\viewmodels\\dohongviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:viewmodels\\dohongviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\dataaccess\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:dataaccess\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\models\\hotelcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:models\\hotelcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\models\\orderphongdichvu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:models\\orderphongdichvu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\viewmodels\\loaiphongphongtrangthaiphong.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:viewmodels\\loaiphongphongtrangthaiphong.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\viewmodels\\thanhtoanviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:viewmodels\\thanhtoanviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|d:\\web\\hotel mvc\\hotelmanagementwithasp.net2\\models\\hoadon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2C5C2D9-B484-46F9-8FFA-885FB8C1342A}|HotelManagement.csproj|solutionrelative:models\\hoadon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 8,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "RoomController.cs",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Controllers\\RoomController.cs",
+              "RelativeDocumentMoniker": "Controllers\\RoomController.cs",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Controllers\\RoomController.cs",
+              "RelativeToolTip": "Controllers\\RoomController.cs",
+              "ViewState": "AgIAAPsAAAAAAAAAAAAwwIABAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-05T03:15:54.434Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "thanhToan.cshtml",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Views\\Room\\thanhToan.cshtml",
+              "RelativeDocumentMoniker": "Views\\Room\\thanhToan.cshtml",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Views\\Room\\thanhToan.cshtml",
+              "RelativeToolTip": "Views\\Room\\thanhToan.cshtml",
+              "ViewState": "AgIAAJMAAAAAAAAAAAAAAJkAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-05T10:26:18.61Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DichVu.cs",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Models\\DichVu.cs",
+              "RelativeDocumentMoniker": "Models\\DichVu.cs",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Models\\DichVu.cs",
+              "RelativeToolTip": "Models\\DichVu.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-06T12:44:19.468Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-06T16:58:17.663Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "OrderPhong.cs",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Models\\OrderPhong.cs",
+              "RelativeDocumentMoniker": "Models\\OrderPhong.cs",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Models\\OrderPhong.cs",
+              "RelativeToolTip": "Models\\OrderPhong.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA8AAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-06T13:33:28.759Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Views\\Room\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Room\\Index.cshtml",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Views\\Room\\Index.cshtml",
+              "RelativeToolTip": "Views\\Room\\Index.cshtml",
+              "ViewState": "AgIAAIIBAAAAAAAAAAAmwLMBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-06T16:02:10.248Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "IRepository.cs",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\DataAccess\\IRepository.cs",
+              "RelativeDocumentMoniker": "DataAccess\\IRepository.cs",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\DataAccess\\IRepository.cs",
+              "RelativeToolTip": "DataAccess\\IRepository.cs",
+              "ViewState": "AgIAAF0AAAAAAAAAAAA7wH0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-06T15:12:23.191Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Repository.cs",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\DataAccess\\Repository.cs",
+              "RelativeDocumentMoniker": "DataAccess\\Repository.cs",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\DataAccess\\Repository.cs",
+              "RelativeToolTip": "DataAccess\\Repository.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAApwCQAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-06T13:44:03.194Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ThanhToanThanhCong.cshtml",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Views\\Room\\ThanhToanThanhCong.cshtml",
+              "RelativeDocumentMoniker": "Views\\Room\\ThanhToanThanhCong.cshtml",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Views\\Room\\ThanhToanThanhCong.cshtml",
+              "RelativeToolTip": "Views\\Room\\ThanhToanThanhCong.cshtml",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAlwCcAAABXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-06T17:28:48.457Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "chiTietHoaDon.cshtml",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Views\\Admin\\chiTietHoaDon.cshtml",
+              "RelativeDocumentMoniker": "Views\\Admin\\chiTietHoaDon.cshtml",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Views\\Admin\\chiTietHoaDon.cshtml",
+              "RelativeToolTip": "Views\\Admin\\chiTietHoaDon.cshtml",
+              "ViewState": "AgIAAJUAAAAAAAAAAAAAALUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-06T17:32:41.629Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "SelectedDichVuViewModel.cs",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\ViewModels\\SelectedDichVuViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\SelectedDichVuViewModel.cs",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\ViewModels\\SelectedDichVuViewModel.cs",
+              "RelativeToolTip": "ViewModels\\SelectedDichVuViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-06T12:59:33.92Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DoHongViewModel.cs",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\ViewModels\\DoHongViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\DoHongViewModel.cs",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\ViewModels\\DoHongViewModel.cs",
+              "RelativeToolTip": "ViewModels\\DoHongViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-06T04:06:28.271Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "bootstrap.esm.js",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+              "RelativeDocumentMoniker": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+              "RelativeToolTip": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+              "ViewState": "AgIAALgDAAAAAAAAAAAlwM0DAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-07-06T14:01:18.079Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "bootstrap.bundle.js",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+              "RelativeDocumentMoniker": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+              "RelativeToolTip": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+              "ViewState": "AgIAACcCAAAAAAAAAAAjwD4CAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-07-06T13:39:59.63Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "HotelContext.cs",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Models\\HotelContext.cs",
+              "RelativeDocumentMoniker": "Models\\HotelContext.cs",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Models\\HotelContext.cs",
+              "RelativeToolTip": "Models\\HotelContext.cs",
+              "ViewState": "AgIAABYBAAAAAAAAAAAAwFEBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-05T10:00:46.217Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "OrderPhongDichVu.cs",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Models\\OrderPhongDichVu.cs",
+              "RelativeDocumentMoniker": "Models\\OrderPhongDichVu.cs",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Models\\OrderPhongDichVu.cs",
+              "RelativeToolTip": "Models\\OrderPhongDichVu.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-06T12:46:10.126Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "LoaiPhongPhongTrangThaiPhong.cs",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\ViewModels\\LoaiPhongPhongTrangThaiPhong.cs",
+              "RelativeDocumentMoniker": "ViewModels\\LoaiPhongPhongTrangThaiPhong.cs",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\ViewModels\\LoaiPhongPhongTrangThaiPhong.cs",
+              "RelativeToolTip": "ViewModels\\LoaiPhongPhongTrangThaiPhong.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-06T10:40:41.198Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "HoaDon.cs",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Models\\HoaDon.cs",
+              "RelativeDocumentMoniker": "Models\\HoaDon.cs",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\Models\\HoaDon.cs",
+              "RelativeToolTip": "Models\\HoaDon.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-06T02:41:49.266Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "ThanhToanViewModel.cs",
+              "DocumentMoniker": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\ViewModels\\ThanhToanViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\ThanhToanViewModel.cs",
+              "ToolTip": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\ViewModels\\ThanhToanViewModel.cs",
+              "RelativeToolTip": "ViewModels\\ThanhToanViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAABZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-05T10:00:18.208Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

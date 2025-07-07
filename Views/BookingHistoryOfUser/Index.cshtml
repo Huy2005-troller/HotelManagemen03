@@ -1,0 +1,64 @@
+﻿@model IEnumerable<OrderPhong>
+<div class="container" style="border:1px solid black">
+    <div class="row">
+        <div class="col-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Phòng</th>
+                        <th>Ngày đến</th>
+                        <th>Ngày đi</th>
+                        <th>Hủy</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @{
+                        int i = 1;
+                        foreach (var order in Model)
+                        {
+                            <tr>
+                                <th>@(i++)</th>
+                                <th>@order.MaPhongNavigation.TenPhong</th>
+                                <th>@order.NgayDen</th>
+                                <th>@order.NgayDi</th>
+                                <th>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#@order.MaOrderPhong">
+                                        Hủy
+                                    </button>
+
+                                    <!-- The Modal -->
+                                    <div class="modal fade" id="@order.MaOrderPhong">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Hủy phòng</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    Bạn có muốn hủy
+                                                </div>
+
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <a class="btn btn-danger" asp-action="removeOrder"  asp-route-maorder="@order.MaOrderPhong" asp-route-maphong="@order.MaPhong">Xác nhận</a>
+                                                    <a class="btn btn-danger" data-bs-dismiss="modal">Close</a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
