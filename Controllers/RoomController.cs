@@ -69,7 +69,8 @@ namespace HotelManagement.Controllers
                     HoTen = hoten,
                     Tuoi = tuoi,
                     GioiTinh = gioitinh,
-                    Sdt = sdt
+                    Sdt = sdt,
+                    Cccd = cccd
                 };
             }
 

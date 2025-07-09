@@ -28,57 +28,134 @@ else
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         }
-        <h2>@Model.Order.MaPhongNavigation.TenPhong - @String.Format("{0:N0}", Model.Order.MaPhongNavigation.MaLoaiPhongNavigation.GiaPhong)</h2>
-        <p>Ngày đến: @Model.Order.NgayDen?.ToString("dd/MM/yyyy")</p>
-        <p>Ngày đi: @Model.Order.NgayDi?.ToString("dd/MM/yyyy")</p>
-        <p>Số ngày: @((Model.Order.NgayDi.GetValueOrDefault() - Model.Order.NgayDen.GetValueOrDefault()).Days)</p>
 
 
-        <p>Tổng tiền phòng: @String.Format("{0:N0}", tongTienPhong)</p>
+        <div class="card border-primary mb-3">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-user"></i> Thông tin khách hàng</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Họ tên:</strong> @Model.Order?.Person?.HoTen
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Số điện thoại:</strong> @Model.Order?.Person?.Sdt
+                    </div>
+                    <div class="col-md-4">
+                        <strong>CCCD:</strong> @Model.Order?.Person?.Cccd
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="card border-info mb-3">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-bed"></i> Thông tin đặt phòng</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Phòng:</strong> @Model.Order.MaPhongNavigation.TenPhong - @String.Format("{0:N0}", Model.Order.MaPhongNavigation.MaLoaiPhongNavigation.GiaPhong) VNĐ/ngày
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Số ngày:</strong> @((Model.Order.NgayDi.GetValueOrDefault() - Model.Order.NgayDen.GetValueOrDefault()).Days) ngày
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <strong>Ngày đến:</strong> @Model.Order.NgayDen?.ToString("dd/MM/yyyy")
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Ngày đi:</strong> @Model.Order.NgayDi?.ToString("dd/MM/yyyy")
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <strong>Tổng tiền phòng:</strong> <span class="text-primary fw-bold">@String.Format("{0:N0}", tongTienPhong) VNĐ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            /* Tăng kích thước checkbox dịch vụ */
+            #dichVuTable .checkbox {
+                width: 20px;
+                height: 20px;
+                transform: scale(2); /* Gấp đôi kích thước */
+                margin-right: -3px;
+                margin-left: 10px;
+                vertical-align: middle;
+                margin-top: 3px; /* Ví dụ: điều chỉnh giá trị này để căn chỉnh */
+            }
+            /* Scroll cho bảng dịch vụ */
+            .dichvu-scroll-wrapper {
+                max-height: 350px;
+                overflow-y: auto;
+                border: 1px solid #e0e0e0;
+                border-radius: 6px;
+                margin-bottom: 10px;
+                background: #fff;
+            }
+            /* Giữ header bảng cố định khi scroll */
+            #dichVuTable thead th {
+                position: sticky;
+                top: 0;
+                background: #f8f9fa;
+                z-index: 2;
+            }
+        </style>
         <form method="post" asp-action="updateThanhToan" asp-controller="Room" onsubmit="return validateAndUpdateForm(this)" id="thanhToanForm">
             <input type="hidden" name="maorder" value="@Model.Order.MaOrderPhong" />
             <input type="hidden" name="maphong" value="@Model.Order.MaPhong" />
 
-            <table class="table" id="dichVuTable">
-                <thead>
-                    <tr>
-                        <th>Chọn</th>
-                        <th>Tên dịch vụ</th>
-                        <th>Giá dịch vụ</th>
-                        <th>Số lượng</th>
-                        <th>Tổng</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var dv in Model.AllDichVus)
-                    {
-                        var existing = Model.Order.OrderPhongDichVus.FirstOrDefault(x => x.MaDichVu == dv.MaDichVu);
-                        var isChecked = existing != null;
-                        var quantity = existing?.SoLuong ?? 1;
-                        <tr>
-                            <td><input type="checkbox" class="checkbox" data-gia="@dv.GiaDichVu" name="isSelected" @(isChecked ? "checked" : "") /></td>
-                            <td class="madichvu" data-madichvu="@dv.MaDichVu">@dv.TenDichVu</td>
-                            <td>@String.Format("{0:N0}", dv.GiaDichVu)</td>
-                            <td><input type="number" class="form-control quantity" data-gia="@dv.GiaDichVu" name="quantities" value="@quantity" min="0" max="999" /></td>
-                            <td class="total">@(isChecked ? String.Format("{0:N0}", dv.GiaDichVu * quantity) : "0")</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <div class="card border-warning mb-3">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-concierge-bell"></i> Chọn dịch vụ</h5>
+                </div>
+                <div class="card-body">
+                    <div class="dichvu-scroll-wrapper">
+                        <table class="table" id="dichVuTable">
+                            <thead>
+                                <tr>
+                                    <th>Chọn</th>
+                                    <th>Tên dịch vụ</th>
+                                    <th>Giá dịch vụ</th>
+                                    <th>Số lượng</th>
+                                    <th>Tổng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var dv in Model.AllDichVus)
+                                {
+                                    var existing = Model.Order.OrderPhongDichVus.FirstOrDefault(x => x.MaDichVu == dv.MaDichVu);
+                                    var isChecked = existing != null;
+                                    var quantity = existing?.SoLuong ?? 1;
+                                    <tr>
+                                        <td><input type="checkbox" class="checkbox" data-gia="@dv.GiaDichVu" name="isSelected" @(isChecked ? "checked" : "") /></td>
+                                        <td class="madichvu" data-madichvu="@dv.MaDichVu">@dv.TenDichVu</td>
+                                        <td>@String.Format("{0:N0}", dv.GiaDichVu)</td>
+                                        <td><input type="number" class="form-control quantity" data-gia="@dv.GiaDichVu" name="quantities" value="@quantity" min="0" max="999" /></td>
+                                        <td class="total">@(isChecked ? String.Format("{0:N0}", dv.GiaDichVu * quantity) : "0")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tongTien fw-bold text-warning">Tổng tiền dịch vụ: <strong>0</strong></div>
+                </div>
+            </div>
 
             <input type="hidden" name="selectedServiceIds" id="selectedServiceIds" />
             <input type="hidden" name="servicePrice" id="servicePrice" />
             <input type="hidden" name="selectedQuantities" id="selectedQuantities" />
             <input type="hidden" name="doHongData" id="doHongData" value="" />
 
-            <div class="tongTien">Tổng tiền dịch vụ: 0</div>
-            
-            <!-- Phần đồ hỏng -->
             <div class="mt-4">
                 <div class="card border-warning">
                     <div class="card-header bg-warning text-dark">
-                        <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Đồ bị hỏng</h5>
+                        <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Đồ bị hỏng hoặc các phụ phí khác</h5>
                     </div>
                     <div class="card-body">
                         <div class="row mb-3">
@@ -92,20 +169,18 @@ else
                                 </button>
                             </div>
                         </div>
-                        
+
                         <div id="danhSachDoHong" class="mb-3">
-                            <!-- Các slot đồ hỏng sẽ được tạo ở đây -->
                         </div>
-                        
+
                         <div class="tongTienDoHong fw-bold text-warning">Tổng tiền đồ hỏng: 0 VNĐ</div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Phần tổng tiền và thuế -->
+
             <div class="mt-4">
-                <div class="card border-info">
-                    <div class="card-header bg-info text-white">
+                <div class="card border-success">
+                    <div class="card-header bg-success text-white">
                         <h5 class="mb-0"><i class="fas fa-calculator"></i> Tổng kết thanh toán</h5>
                     </div>
                     <div class="card-body">
@@ -135,7 +210,7 @@ else
                                 </div>
                                 <div class="mb-2 border-top pt-2">
                                     <span class="fw-bold fs-5">Tổng sau thuế:</span>
-                                    <span class="tongSauThue text-primary fs-5">0 VNĐ</span>
+                                    <span class="tongSauThue text-success fs-5">0 VNĐ</span>
                                 </div>
                             </div>
                         </div>
@@ -143,13 +218,14 @@ else
                 </div>
             </div>
             
-            <div class="totalAll fw-bold fs-5 text-primary mt-3">Tổng tất cả: 0</div>
-
-            <button type="submit" class="btn btn-success">Lưu chỉnh sửa</button>
-            <a class="btn btn-primary" asp-action="addHoadon" asp-route-maorder="@Model.Order.MaOrderPhong" asp-route-tongtien="@(tongTienPhong)" asp-route-maphong="@Model.Order.MaPhong" id="btnThanhToan">Xác nhận thanh toán</a>
+            <div class="totalAll fw-bold fs-3 text-success mt-3">Tổng tất cả: 0</div>
+            <br >
+            <button type="submit" class="btn btn-warning">Lưu chỉnh sửa</button>
+            <a class="btn btn-success" asp-action="addHoadon" asp-route-maorder="@Model.Order.MaOrderPhong" asp-route-tongtien="@(tongTienPhong)" asp-route-maphong="@Model.Order.MaPhong" id="btnThanhToan">Xác nhận thanh toán</a>
         </form>
     </div>
 }
+
 
 @section Scripts {
     <script>
@@ -157,19 +233,19 @@ else
             // Kiểm tra xem có ít nhất một dịch vụ được chọn không
             var checkedBoxes = form.querySelectorAll('.checkbox:checked');
             var hasValidService = false;
-            
+
             for (var checkbox of checkedBoxes) {
                 var row = checkbox.closest('tr');
                 var quantity = row.querySelector('.quantity');
                 var qty = parseInt(quantity.value) || 0;
-                if (qty > 0) {
+                if (qty >= 0) {
                     hasValidService = true;
                     break;
                 }
             }
-            
+
             if (!hasValidService) {
-                alert('Vui lòng chọn ít nhất một dịch vụ với số lượng lớn hơn 0!');
+                alert('Vui lòng chọn ít nhất một dịch vụ với số lượng lớn hơn hoặc bằng 0 !');
                 return false;
             }
 
@@ -179,7 +255,7 @@ else
                 var quantity = row.querySelector('.quantity');
                 var qty = parseInt(quantity.value) || 0;
                 if (qty < 0) {
-                    alert('Số lượng dịch vụ phải lớn hơn hoặc bằng 0!');
+                    alert('Số lượng dịch vụ phải lớn hơn hoặc bằng 0 !');
                     quantity.focus();
                     return false;
                 }
@@ -192,9 +268,9 @@ else
                 var index = input.getAttribute('data-index');
                 var soLuong = parseInt(form.querySelector(`.soLuongDoHong[data-index="${index}"]`).value) || 0;
                 var donGia = parseFloat(form.querySelector(`.donGiaDoHong[data-index="${index}"]`).value) || 0;
-                
+
                 if (ten && (soLuong <= 0 || donGia < 0)) {
-                    alert('Vui lòng nhập đầy đủ thông tin đồ hỏng!');
+                    alert('Vui lòng nhập đầy đủ thông tin đồ hỏng !');
                     return false;
                 }
             }
@@ -228,14 +304,14 @@ else
             form.querySelector("#selectedServiceIds").value = serviceIds.join(',');
             form.querySelector("#servicePrice").value = servicePrice.join(',');
             form.querySelector("#selectedQuantities").value = selectedQuantities.join(',');
-            
+
             // Debug: Log dữ liệu trước khi submit
             console.log('Dữ liệu dịch vụ:', {
                 serviceIds: serviceIds,
                 servicePrice: servicePrice,
                 selectedQuantities: selectedQuantities
             });
-            
+
             return true;
         }
 
@@ -246,12 +322,12 @@ else
                 var quantity = parseInt(row.querySelector('.quantity').value) || 0;
                 var price = parseFloat(checkbox.getAttribute('data-gia'));
                 var total = checkbox.checked ? quantity * price : 0;
-                
+
                 // Kiểm tra giá trị hợp lệ
                 if (isNaN(total) || total < 0) {
                     total = 0;
                 }
-                
+
                 row.querySelector('.total').textContent = total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
                 tongDichVu += total;
             });
@@ -266,23 +342,32 @@ else
             });
 
             let tienPhong = parseFloat("@tongTienPhong") || 0;
-            let tongTatCa = tongDichVu + tienPhong + tongDoHong;
-            
+            let tongTruocThue = tienPhong + tongDichVu + tongDoHong;
+            let thueVAT = tongTruocThue * 0.1; // Thuế VAT 10%
+            let tongSauThue = tongTruocThue + thueVAT;
+
             // Kiểm tra tổng tiền hợp lệ
-            if (isNaN(tongTatCa) || tongTatCa < 0) {
-                tongTatCa = 0;
+            if (isNaN(tongSauThue) || tongSauThue < 0) {
+                tongSauThue = 0;
             }
-            
+
+            // Cập nhật hiển thị
             document.querySelector('.tongTien').textContent = "Tổng tiền dịch vụ: " + tongDichVu.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
             document.querySelector('.tongTienDoHong').textContent = "Tổng tiền đồ hỏng: " + tongDoHong.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-            document.querySelector('.totalAll').textContent = "Tổng tất cả: " + tongTatCa.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-            
+            document.querySelector('.tienPhong').textContent = tienPhong.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.tienDichVu').textContent = tongDichVu.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.tienDoHong').textContent = tongDoHong.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.tongTruocThue').textContent = tongTruocThue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.thueVAT').textContent = thueVAT.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.tongSauThue').textContent = tongSauThue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.querySelector('.totalAll').textContent = "Tổng tất cả: " + tongSauThue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+
             // Cập nhật giá trị cho nút thanh toán
             var btnThanhToan = document.getElementById('btnThanhToan');
             if (btnThanhToan) {
                 var currentHref = btnThanhToan.getAttribute('href');
                 var baseUrl = currentHref.split('?')[0];
-                var newHref = baseUrl + '?maorder=@Model.Order.MaOrderPhong&tongtien=' + tongTatCa + '&maphong=@Model.Order.MaPhong';
+                var newHref = baseUrl + '?maorder=@Model.Order.MaOrderPhong&tongtien=' + tongSauThue + '&maphong=@Model.Order.MaPhong';
                 btnThanhToan.setAttribute('href', newHref);
             }
 
@@ -291,12 +376,12 @@ else
         }
 
         // Tính toán ban đầu
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             calculateTotals();
             console.log('DOM loaded, tính toán ban đầu hoàn tất');
-            
+
             // Debug form submit
-            document.getElementById('thanhToanForm').addEventListener('submit', function(e) {
+            document.getElementById('thanhToanForm').addEventListener('submit', function (e) {
                 console.log('Form đang submit...');
                 console.log('Form data:', new FormData(this));
             });
@@ -310,7 +395,7 @@ else
 
         // Validation cho input số lượng
         document.querySelectorAll('.quantity').forEach(input => {
-            input.addEventListener('blur', function() {
+            input.addEventListener('blur', function () {
                 var value = parseInt(this.value) || 0;
                 if (value < 0) {
                     this.value = 0;
@@ -323,7 +408,7 @@ else
         });
 
         // Validation cho input đồ hỏng
-        document.addEventListener('blur', function(e) {
+        document.addEventListener('blur', function (e) {
             if (e.target.classList.contains('soLuongDoHong')) {
                 var value = parseInt(e.target.value) || 0;
                 if (value < 1) {
@@ -367,36 +452,36 @@ else
             var headerRow = document.createElement('div');
             headerRow.className = 'row mb-2 fw-bold text-muted';
             headerRow.innerHTML = `
-                <div class="col-md-4">Tên đồ hỏng</div>
-                <div class="col-md-2">Số lượng</div>
-                <div class="col-md-3">Đơn giá (VNĐ)</div>
-                <div class="col-md-2">Thành tiền</div>
-                <div class="col-md-1">Thao tác</div>
-            `;
+                        <div class="col-md-4">Tên đồ hỏng</div>
+                        <div class="col-md-2">Số lượng</div>
+                        <div class="col-md-3">Đơn giá (VNĐ)</div>
+                        <div class="col-md-2">Thành tiền</div>
+                        <div class="col-md-1">Thao tác</div>
+                    `;
             container.appendChild(headerRow);
 
             for (var i = 0; i < soLuong; i++) {
                 var row = document.createElement('div');
                 row.className = 'row mb-2 align-items-center border-bottom pb-2';
                 row.innerHTML = `
-                    <div class="col-md-4">
-                        <input type="text" class="form-control tenDoHong" placeholder="Tên đồ hỏng" data-index="${i}" />
-                    </div>
-                    <div class="col-md-2">
-                        <input type="number" class="form-control soLuongDoHong" placeholder="Số lượng" min="1" value="1" data-index="${i}" />
-                    </div>
-                    <div class="col-md-3">
-                        <input type="number" class="form-control donGiaDoHong" placeholder="Đơn giá" min="0" value="0" data-index="${i}" />
-                    </div>
-                    <div class="col-md-2">
-                        <span class="thanhTienDoHong fw-bold text-danger" data-index="${i}">0 VNĐ</span>
-                    </div>
-                    <div class="col-md-1">
-                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="xoaSlotDoHong(${i})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                `;
+                            <div class="col-md-4">
+                                <input type="text" class="form-control tenDoHong" placeholder="Tên đồ hỏng" data-index="${i}" />
+                            </div>
+                            <div class="col-md-2">
+                                <input type="number" class="form-control soLuongDoHong" placeholder="Số lượng" min="1" value="1" data-index="${i}" />
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" class="form-control donGiaDoHong" placeholder="Đơn giá" min="0" value="0" data-index="${i}" />
+                            </div>
+                            <div class="col-md-2">
+                                <span class="thanhTienDoHong fw-bold text-danger" data-index="${i}">0 VNĐ</span>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="xoaSlotDoHong(${i})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        `;
                 container.appendChild(row);
             }
 
@@ -408,7 +493,7 @@ else
         // Thêm event listeners cho đồ hỏng
         function addDoHongEventListeners() {
             document.querySelectorAll('.tenDoHong, .soLuongDoHong, .donGiaDoHong').forEach(input => {
-                input.addEventListener('input', function() {
+                input.addEventListener('input', function () {
                     calculateDoHongTotal(this);
                     calculateTotals();
                 });
@@ -444,8 +529,8 @@ else
             var soLuong = parseInt(document.querySelector(`.soLuongDoHong[data-index="${index}"]`).value) || 0;
             var donGia = parseFloat(document.querySelector(`.donGiaDoHong[data-index="${index}"]`).value) || 0;
             var thanhTien = soLuong * donGia;
-            
-            document.querySelector(`.thanhTienDoHong[data-index="${index}"]`).textContent = 
+
+            document.querySelector(`.thanhTienDoHong[data-index="${index}"]`).textContent =
                 thanhTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
         }
 
@@ -457,12 +542,12 @@ else
                 var quantity = parseInt(row.querySelector('.quantity').value) || 0;
                 var price = parseFloat(checkbox.getAttribute('data-gia'));
                 var total = checkbox.checked ? quantity * price : 0;
-                
+
                 // Kiểm tra giá trị hợp lệ
                 if (isNaN(total) || total < 0) {
                     total = 0;
                 }
-                
+
                 row.querySelector('.total').textContent = total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
                 tongDichVu += total;
             });
@@ -480,12 +565,12 @@ else
             let tongTruocThue = tienPhong + tongDichVu + tongDoHong;
             let thueVAT = tongTruocThue * 0.1; // Thuế VAT 10%
             let tongSauThue = tongTruocThue + thueVAT;
-            
+
             // Kiểm tra tổng tiền hợp lệ
             if (isNaN(tongSauThue) || tongSauThue < 0) {
                 tongSauThue = 0;
             }
-            
+
             // Cập nhật hiển thị
             document.querySelector('.tongTien').textContent = "Tổng tiền dịch vụ: " + tongDichVu.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
             document.querySelector('.tongTienDoHong').textContent = "Tổng tiền đồ hỏng: " + tongDoHong.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
@@ -496,7 +581,7 @@ else
             document.querySelector('.thueVAT').textContent = thueVAT.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
             document.querySelector('.tongSauThue').textContent = tongSauThue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
             document.querySelector('.totalAll').textContent = "Tổng tất cả: " + tongSauThue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-            
+
             // Cập nhật giá trị cho nút thanh toán
             var btnThanhToan = document.getElementById('btnThanhToan');
             if (btnThanhToan) {
@@ -516,9 +601,9 @@ else
             document.querySelectorAll('.tenDoHong').forEach(input => {
                 var index = input.getAttribute('data-index');
                 var ten = input.value.trim();
-                var soLuong = parseInt(document.querySelector(`.soLuongDoHong[data-index="${index}"]`).value) || 0;
+                var soLuong = parseFloat(document.querySelector(`.soLuongDoHong[data-index="${index}"]`).value) || 0;
                 var donGia = parseFloat(document.querySelector(`.donGiaDoHong[data-index="${index}"]`).value) || 0;
-                
+
                 if (ten && soLuong > 0 && donGia >= 0) {
                     doHongs.push({
                         TenDoHong: ten,

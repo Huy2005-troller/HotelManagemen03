@@ -8,6 +8,7 @@ namespace HotelManagement.DataAccess
 {
     public class Repository : IRepository
     {
+
         public void deleteAllDichVuTrongOrder(string maOrderPhong)
         {
             var oldItems = context.OrderPhongDichVus.Where(x => x.MaOrderPhong == maOrderPhong).ToList();
@@ -191,6 +192,13 @@ namespace HotelManagement.DataAccess
                 context.People.Update(orderPhong.Person);
                 context.SaveChanges();
             }
+            else
+            {
+                // Nếu Person chưa tồn tại thì thêm mới
+                context.People.Add(orderPhong.Person);
+                context.SaveChanges();
+            }
+            
             //khi add orderPhong thi thông tin người order cũng được lưu tại vì trong orderPhong có Person 
             context.OrderPhongs.Add(orderPhong);
             context.SaveChanges();
@@ -312,7 +320,16 @@ namespace HotelManagement.DataAccess
         }
 
         public IEnumerable<HoaDon> GetHoaDon => context.HoaDons.Include(hd => hd.MaOrderPhongNavigation);
-
+        public IEnumerable<HoaDon> GetHoaDonFull()
+        {
+            return context.HoaDons
+                .Include(hd => hd.MaOrderPhongNavigation)
+                    .ThenInclude(op => op.MaPhongNavigation)
+                        .ThenInclude(p => p.MaLoaiPhongNavigation)
+                .Include(hd => hd.MaOrderPhongNavigation.OrderPhongDichVus)
+                    .ThenInclude(odpdv => odpdv.MaDichVuNavigation)
+                .ToList();
+        }
         public IEnumerable<HoaDon> getChiTietHoaDon(string mahoadon)
         {
             var hoadon = context.HoaDons.Where(hd => hd.MaHoaDon == mahoadon);

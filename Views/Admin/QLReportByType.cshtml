@@ -1,0 +1,256 @@
+﻿@{
+    ViewBag.Title = "Báo cáo doanh thu theo loại";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center border-info mb-2">
+            <div class="card-body">
+                <h5 class="card-title">Tổng số phòng</h5>
+                <h2 id="totalRoom" class="text-info">0</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center border-success mb-2">
+            <div class="card-body">
+                <h5 class="card-title">Tổng số loại phòng</h5>
+                <h2 id="totalRoomType" class="text-success">0</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center border-warning mb-2">
+            <div class="card-body">
+                <h5 class="card-title">Tổng số dịch vụ</h5>
+                <h2 id="totalService" class="text-warning">0</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <label for="reportTypeSelect" class="form-label">Chọn loại báo cáo:</label>
+        <select id="reportTypeSelect" class="form-select">
+            <option value="/Report/QLReport">Báo cáo doanh thu theo thời gian</option>
+            <option value="/Report/QLReportByType">Báo cáo doanh thu theo loại</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="yearSelect" class="form-label">Chọn năm:</label>
+        <select id="yearSelect" class="form-select"></select>
+    </div>
+    <div class="col-md-3">
+        <label for="monthSelect" class="form-label">Chọn tháng:</label>
+        <select id="monthSelect" class="form-select">
+            <option value="0">Tất cả</option>
+            @for (int i = 1; i <= 12; i++)
+            {
+                <option value="@i">Tháng @i</option>
+            }
+        </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <h5>Doanh thu theo loại phòng</h5>
+        <canvas id="roomTypePieChart"></canvas>
+    </div>
+    <div class="col-md-4">
+        <h5>Doanh thu từng phòng</h5>
+        <canvas id="roomPieChart"></canvas>
+    </div>
+    <div class="col-md-4">
+        <h5>Doanh thu theo dịch vụ</h5>
+        <canvas id="servicePieChart"></canvas>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-dark">Top doanh thu phòng</div>
+            <table class="table mb-0" id="tableRoomRevenue">
+                <thead>
+                    <tr>
+                        <th>Phòng</th>
+                        <th>Doanh thu</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-success text-dark">Top doanh thu loại phòng</div>
+            <table class="table mb-0" id="tableRoomTypeRevenue">
+                <thead>
+                    <tr>
+                        <th>Loại phòng</th>
+                        <th>Doanh thu</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">Top doanh thu dịch vụ</div>
+            <table class="table mb-0" id="tableServiceRevenue">
+                <thead>
+                    <tr>
+                        <th>Dịch vụ</th>
+                        <th>Doanh thu</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Dropdown chuyển trang
+    document.getElementById('reportTypeSelect').addEventListener('change', function() {
+        window.location.href = this.value;
+    });
+    document.getElementById('reportTypeSelect').value = window.location.pathname;
+
+    let selectedYear = null;
+    let selectedMonth = 0;
+    let roomTypePie, roomPie, servicePie;
+
+    // Lấy danh sách năm động
+    fetch('/Report/GetAvailableYears')
+        .then(res => res.json())
+        .then(years => {
+            const yearSelect = document.getElementById('yearSelect');
+            years.forEach(y => {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.text = y;
+                yearSelect.appendChild(opt);
+            });
+            if (years.length > 0) {
+                yearSelect.value = years[0];
+                selectedYear = years[0];
+                selectedMonth = document.getElementById('monthSelect').value;
+                loadPieCharts(selectedYear, selectedMonth);
+            }
+        });
+
+    document.getElementById('yearSelect').addEventListener('change', function () {
+        selectedYear = this.value;
+        selectedMonth = document.getElementById('monthSelect').value;
+        loadPieCharts(selectedYear, selectedMonth);
+    });
+    document.getElementById('monthSelect').addEventListener('change', function () {
+        selectedMonth = this.value;
+        selectedYear = document.getElementById('yearSelect').value;
+        loadPieCharts(selectedYear, selectedMonth);
+    });
+
+    // Render bảng top doanh thu
+    function renderTopTable(tableId, data, labelName) {
+        const tbody = document.getElementById(tableId).querySelector('tbody');
+        tbody.innerHTML = '';
+        if (!data || data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="2">Không có dữ liệu</td></tr>';
+            return;
+        }
+        data.forEach((item, idx) => {
+            let highlight = '';
+            if (idx === 0) highlight = 'style="font-weight:bold;background:#e6f7ff"'; // Top 1
+            if (idx === data.length - 1) highlight = 'style="color:#ff4d4f;font-weight:bold"'; // Top cuối
+            tbody.innerHTML += `<tr ${highlight}><td>${item.label}</td><td>${item.value.toLocaleString('vi-VN')}</td></tr>`;
+        });
+    }
+
+    function loadPieCharts(year, month) {
+        // Doanh thu theo loại phòng
+        fetch(`/Report/GetRevenueByRoomType?year=${year}&month=${month}`)
+            .then(res => res.json())
+            .then(data => {
+                if (roomTypePie) roomTypePie.destroy();
+                roomTypePie = new Chart(document.getElementById('roomTypePieChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.values,
+                            backgroundColor: [
+                                '#36cfc9', '#ff7a45', '#ffc53d', '#bae637', '#9254de', '#ff85c0', '#5cdbd3'
+                            ]
+                        }]
+                    },
+                    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+                });
+                // Render bảng loại phòng
+                const tableData = data.labels.map((label, idx) => ({ label, value: data.values[idx] }))
+                    .sort((a, b) => b.value - a.value);
+                renderTopTable('tableRoomTypeRevenue', tableData, 'Loại phòng');
+            });
+
+        // Doanh thu từng phòng
+        fetch(`/Report/GetRevenueByRoom?year=${year}&month=${month}`)
+            .then(res => res.json())
+            .then(data => {
+                if (roomPie) roomPie.destroy();
+                roomPie = new Chart(document.getElementById('roomPieChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.values,
+                            backgroundColor: [
+                                '#36cfc9', '#ff7a45', '#ffc53d', '#bae637', '#9254de', '#ff85c0', '#5cdbd3'
+                            ]
+                        }]
+                    },
+                    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+                });
+                // Render bảng phòng
+                const tableData = data.labels.map((label, idx) => ({ label, value: data.values[idx] }))
+                    .sort((a, b) => b.value - a.value);
+                renderTopTable('tableRoomRevenue', tableData, 'Phòng');
+            });
+
+        // Doanh thu theo dịch vụ
+        fetch(`/Report/GetRevenueByService?year=${year}&month=${month}`)
+            .then(res => res.json())
+            .then(data => {
+                if (servicePie) servicePie.destroy();
+                servicePie = new Chart(document.getElementById('servicePieChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.values,
+                            backgroundColor: [
+                                '#36cfc9', '#ff7a45', '#ffc53d', '#bae637', '#9254de', '#ff85c0', '#5cdbd3'
+                            ]
+                        }]
+                    },
+                    options: { responsive: true, plugins: { legend: { position: 'top' } } }
+                });
+                // Render bảng dịch vụ
+                const tableData = data.labels.map((label, idx) => ({ label, value: data.values[idx] }))
+                    .sort((a, b) => b.value - a.value);
+                renderTopTable('tableServiceRevenue', tableData, 'Dịch vụ');
+            });
+    }
+
+    // Lấy tổng số phòng, loại phòng, dịch vụ
+    fetch('/api/Report/GetTotalCounts')
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('totalRoom').innerText = data.totalRoom;
+            document.getElementById('totalRoomType').innerText = data.totalRoomType;
+            document.getElementById('totalService').innerText = data.totalService;
+        });
+</script>

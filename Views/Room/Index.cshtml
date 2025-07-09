@@ -10,9 +10,11 @@
             }
         }
         <div class="col-3 p-0 " style="border : 1px solid black">
-            <div class=" text-center list-group-item active" aria-current="true">Loại phòng</div>
+            <div class="text-center list-group-item active" aria-current="true" style="color: #8A2BE2; background-color: #f0e6ff; padding: 10px; border-radius: 5px; font-weight: bold; font-size: 1.1em;">
+                Loại phòng <span style="font-size: 2em;">&#8595;</span>
+            </div>
             <div class="text-center">
-                <a class="btn btn-block m-3" href="/room/index">All</a> <br />
+                <a class="btn btn-primary btn-dark btn-block m-2" href="/room/index">All</a> <br />
 
                 @foreach (var loaiphong in Model.loaiphongs)
                 {
@@ -22,7 +24,12 @@
                 }
             </div>
 
-            <div class=" text-center list-group-item active" aria-current="true">Trạng thái phòng</div>
+
+            <div class="text-center list-group-item active" aria-current="true"
+                 style="color: #196F3D; background-color: #E6FAE6;
+            padding: 10px; border-radius: 5px; font-weight: bold; font-size: 1.1em;">
+                Trạng thái phòng <span style="font-size: 2em;">&#8595;</span>
+            </div>
             <div class="text-center">
                 @foreach (var trangthai in Model.trangthaiphongs)
                 {

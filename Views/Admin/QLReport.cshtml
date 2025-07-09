@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "Báo cáo doanh thu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2 class="text-center">BÁO CÁO DOANH THU</h2>
+<hr>
+
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <label for="reportTypeSelect" class="form-label">Chọn trang báo cáo:</label>
+        <select id="reportTypeSelect" class="form-select">
+            <option value="/Report/QLReport">Doanh thu theo thời gian</option>
+            <option value="/Report/QLReportByType">Doanh thu theo loại</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="yearSelect" class="form-label">Chọn năm:</label>
+        <select id="yearSelect" class="form-select"></select>
+    </div>
+</div>
+
+<script>
+    document.getElementById('reportTypeSelect').addEventListener('change', function () {
+        window.location.href = this.value;
+    });
+    // Nếu muốn tự động chọn đúng option khi vào trang, có thể thêm:
+    //document.getElementById('reportTypeSelect').value = window.location.pathname;
+</script>
+
+
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Doanh thu theo tháng</h4>
+        <canvas id="revenueBarChart"></canvas>
+    </div>
+    <div class="col-md-6">
+        <h4>Doanh thu theo quý</h4>
+        <canvas id="revenueQuarterBarChart"></canvas>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h4>So sánh doanh thu các năm</h4>
+        <canvas id="revenueYearBarChart"></canvas>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let barChart, quarterChart, yearChart;
+
+    // Lấy danh sách năm động
+    fetch('/Report/GetAvailableYears')
+        .then(res => res.json())
+        .then(years => {
+            const yearSelect = document.getElementById('yearSelect');
+            years.forEach(y => {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.text = y;
+                yearSelect.appendChild(opt);
+            });
+            if (years.length > 0) {
+                yearSelect.value = years[0];
+                loadCharts(years[0]);
+            }
+            yearSelect.addEventListener('change', function () {
+                loadCharts(this.value);
+            });
+        });
+
+    function loadCharts(year) {
+        // Doanh thu theo tháng
+        fetch(`/Report/GetRevenueByMonth?year=${year}`)
+            .then(res => res.json())
+            .then(data => {
+                if (barChart) barChart.destroy();
+                barChart = new Chart(document.getElementById('revenueBarChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Doanh thu (VNĐ)',
+                            data: data.values,
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            });
+
+        // Doanh thu theo quý
+        fetch(`/Report/GetRevenueByQuarter?year=${year}`)
+            .then(res => res.json())
+            .then(data => {
+                if (quarterChart) quarterChart.destroy();
+                quarterChart = new Chart(document.getElementById('revenueQuarterBarChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Doanh thu theo quý',
+                            data: data.values,
+                            backgroundColor: 'rgba(255, 206, 86, 0.5)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            });
+
+        // Doanh thu theo năm (luôn load lại để cập nhật)
+        fetch('/Report/GetRevenueByYear')
+            .then(res => res.json())
+            .then(data => {
+                if (yearChart) yearChart.destroy();
+                yearChart = new Chart(document.getElementById('revenueYearBarChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Tổng doanh thu',
+                            data: data.values,
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            });
+    }
+
+</script>
