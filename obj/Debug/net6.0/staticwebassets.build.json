@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "hlRBXXKOWmDsTinjY5O/8to2Jr3QgTSnhxUCKew+YLs=",
+  "Hash": "Gtyq5HNkfvA/AEPht5tlagoQJk1KFpLLRTYW5dsMybk=",
   "Source": "HotelManagement",
   "BasePath": "_content/HotelManagement",
   "Mode": "Default",
@@ -53,6 +53,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\HotelManagement.bundle.scp.css"
+    },
+    {
+      "Identity": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\css\\print.css",
+      "SourceId": "HotelManagement",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\",
+      "BasePath": "_content/HotelManagement",
+      "RelativePath": "css/print.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\print.css"
     },
     {
       "Identity": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\css\\site.css",

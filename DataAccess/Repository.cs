@@ -8,7 +8,23 @@ namespace HotelManagement.DataAccess
 {
     public class Repository : IRepository
     {
+        private HotelContext context;
+        private IHttpContextAccessor accessor;
+        public Repository(HotelContext context, IHttpContextAccessor accessor)
+        {
+            this.context = context;
+            this.accessor = accessor;
+        }
+        public OrderPhong getOrderPhongByMaOrder(string maorder)
+        {
+            return context.OrderPhongs.FirstOrDefault(x => x.MaOrderPhong == maorder);
+        }
 
+        public void updateOrderPhong(OrderPhong order)
+        {
+            context.OrderPhongs.Update(order);
+            context.SaveChanges();
+        }
         public void deleteAllDichVuTrongOrder(string maOrderPhong)
         {
             var oldItems = context.OrderPhongDichVus.Where(x => x.MaOrderPhong == maOrderPhong).ToList();
@@ -19,15 +35,6 @@ namespace HotelManagement.DataAccess
         public DichVu getDichvuById(string maDichVu)
         {
             return context.DichVus.FirstOrDefault(x => x.MaDichVu == maDichVu);
-        }
-
-        private HotelContext context;
-        private IHttpContextAccessor accessor;
-        public Repository(HotelContext context, IHttpContextAccessor accessor)
-        {
-
-            this.context = context;
-            this.accessor = accessor;
         }
 
         public IEnumerable<Person> getPeople => this.context.People;

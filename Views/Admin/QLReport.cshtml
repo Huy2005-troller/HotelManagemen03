@@ -4,6 +4,24 @@
 }
 <h2 class="text-center">BÁO CÁO DOANH THU</h2>
 <hr>
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center border-info mb-2">
+            <div class="card-body">
+                <h5 class="card-title">Tổng doanh thu</h5>
+                <h2 id="grandTotalRevenue" class="text-info">0</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-danger mb-2">
+            <div class="card-body">
+                <h5 class="card-title">Lãi sau thuế</h5>
+                <h2 id="profitAfterTax" class="text-danger">0</h2>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="row mb-3">
@@ -51,7 +69,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     let barChart, quarterChart, yearChart;
-
+    let selectedYear = null;
     // Lấy danh sách năm động
     fetch('/Report/GetAvailableYears')
         .then(res => res.json())
@@ -65,10 +83,14 @@
             });
             if (years.length > 0) {
                 yearSelect.value = years[0];
-                loadCharts(years[0]);
+                selectedYear = years[0];
+                loadCharts(selectedYear);
+                loadGrandTotal(selectedYear);
             }
             yearSelect.addEventListener('change', function () {
-                loadCharts(this.value);
+                selectedYear = this.value;
+                loadCharts(selectedYear);
+                loadGrandTotal(selectedYear);
             });
         });
 
@@ -140,4 +162,12 @@
             });
     }
 
+    function loadGrandTotal(year) {
+        fetch(`/Report/GetGrandTotalRevenue?year=${year}`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('grandTotalRevenue').innerText = data.grandTotal.toLocaleString('vi-VN');
+                document.getElementById('profitAfterTax').innerText = Math.round(data.grandTotal * 0.9).toLocaleString('vi-VN');
+            });
+    }
 </script>

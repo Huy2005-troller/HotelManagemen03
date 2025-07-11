@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="row mb-4">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card text-center border-info mb-2">
             <div class="card-body">
                 <h5 class="card-title">Tổng số phòng</h5>
@@ -11,7 +11,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card text-center border-success mb-2">
             <div class="card-body">
                 <h5 class="card-title">Tổng số loại phòng</h5>
@@ -19,11 +19,47 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card text-center border-warning mb-2">
             <div class="card-body">
                 <h5 class="card-title">Tổng số dịch vụ</h5>
                 <h2 id="totalService" class="text-warning">0</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-danger mb-2">
+            <div class="card-body">
+                <h5 class="card-title">Lãi sau thuế</h5>
+                <h2 id="profitAfterTax" class="text-danger">0</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center border-primary mb-2">
+            <div class="card-body">
+                <h5 class="card-title">Doanh thu phòng</h5>
+                <h2 id="roomRevenue" class="text-primary">0</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center border-dark mb-2">
+            <div class="card-body">
+                <h5 class="card-title">Doanh thu dịch vụ</h5>
+                <h2 id="serviceRevenue" class="text-dark">0</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-info mb-2">
+            <div class="card-body">
+                <h5 class="card-title">Tổng doanh thu</h5>
+                <h2 id="grandTotalRevenue" class="text-info">0</h2>
             </div>
         </div>
     </div>
@@ -53,17 +89,21 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-lg-3 col-md-6 col-12 mb-4">
         <h5>Doanh thu theo loại phòng</h5>
-        <canvas id="roomTypePieChart"></canvas>
+        <canvas id="roomTypePieChart" class="w-100" style="max-width:400px;margin:auto"></canvas>
     </div>
-    <div class="col-md-4">
+    <div class="col-lg-3 col-md-6 col-12 mb-4">
         <h5>Doanh thu từng phòng</h5>
-        <canvas id="roomPieChart"></canvas>
+        <canvas id="roomPieChart" class="w-100" style="max-width:400px;margin:auto"></canvas>
     </div>
-    <div class="col-md-4">
+    <div class="col-lg-3 col-md-6 col-12 mb-4">
         <h5>Doanh thu theo dịch vụ</h5>
-        <canvas id="servicePieChart"></canvas>
+        <canvas id="servicePieChart" class="w-100" style="max-width:400px;margin:auto"></canvas>
+    </div>
+    <div class="col-lg-3 col-md-6 col-12 mb-4">
+        <h5>Lãi sau thuế: Phòng vs Dịch vụ</h5>
+        <canvas id="profitPieChart" class="w-100" style="max-width:400px;margin:auto"></canvas>
     </div>
 </div>
 
@@ -123,7 +163,8 @@
 
     let selectedYear = null;
     let selectedMonth = 0;
-    let roomTypePie, roomPie, servicePie;
+    let roomTypePie, roomPie, servicePie, profitPie;
+    let lastRoomTotal = 0, lastServiceTotal = 0;
 
     // Lấy danh sách năm động
     fetch('/Report/GetAvailableYears')
@@ -172,7 +213,9 @@
     }
 
     function loadPieCharts(year, month) {
-        // Doanh thu theo loại phòng
+        let roomTypeTotal = 0;
+
+        // Doanh thu theo loại phòng (không ảnh hưởng tổng)
         fetch(`/Report/GetRevenueByRoomType?year=${year}&month=${month}`)
             .then(res => res.json())
             .then(data => {
@@ -194,55 +237,82 @@
                 const tableData = data.labels.map((label, idx) => ({ label, value: data.values[idx] }))
                     .sort((a, b) => b.value - a.value);
                 renderTopTable('tableRoomTypeRevenue', tableData, 'Loại phòng');
+                // Tính tổng doanh thu loại phòng
+                roomTypeTotal = data.values.reduce((sum, value) => sum + value, 0);
+                document.getElementById('roomTypeRevenue').innerText = roomTypeTotal.toLocaleString('vi-VN');
             });
 
-        // Doanh thu từng phòng
-        fetch(`/Report/GetRevenueByRoom?year=${year}&month=${month}`)
-            .then(res => res.json())
-            .then(data => {
-                if (roomPie) roomPie.destroy();
-                roomPie = new Chart(document.getElementById('roomPieChart'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: data.labels,
-                        datasets: [{
-                            data: data.values,
-                            backgroundColor: [
-                                '#36cfc9', '#ff7a45', '#ffc53d', '#bae637', '#9254de', '#ff85c0', '#5cdbd3'
-                            ]
-                        }]
-                    },
-                    options: { responsive: true, plugins: { legend: { position: 'top' } } }
-                });
-                // Render bảng phòng
-                const tableData = data.labels.map((label, idx) => ({ label, value: data.values[idx] }))
-                    .sort((a, b) => b.value - a.value);
-                renderTopTable('tableRoomRevenue', tableData, 'Phòng');
+        // Lấy doanh thu phòng và dịch vụ song song
+        Promise.all([
+            fetch(`/Report/GetRevenueByRoom?year=${year}&month=${month}`).then(res => res.json()),
+            fetch(`/Report/GetRevenueByService?year=${year}&month=${month}`).then(res => res.json())
+        ]).then(([roomData, serviceData]) => {
+            // Pie chart phòng
+            if (roomPie) roomPie.destroy();
+            roomPie = new Chart(document.getElementById('roomPieChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: roomData.labels,
+                    datasets: [{
+                        data: roomData.values,
+                        backgroundColor: [
+                            '#36cfc9', '#ff7a45', '#ffc53d', '#bae637', '#9254de', '#ff85c0', '#5cdbd3'
+                        ]
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'top' } } }
             });
+            const tableRoom = roomData.labels.map((label, idx) => ({ label, value: roomData.values[idx] }))
+                .sort((a, b) => b.value - a.value);
+            renderTopTable('tableRoomRevenue', tableRoom, 'Phòng');
+            const roomTotal = roomData.values.reduce((sum, value) => sum + value, 0);
+            document.getElementById('roomRevenue').innerText = roomTotal.toLocaleString('vi-VN');
 
-        // Doanh thu theo dịch vụ
-        fetch(`/Report/GetRevenueByService?year=${year}&month=${month}`)
-            .then(res => res.json())
-            .then(data => {
-                if (servicePie) servicePie.destroy();
-                servicePie = new Chart(document.getElementById('servicePieChart'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: data.labels,
-                        datasets: [{
-                            data: data.values,
-                            backgroundColor: [
-                                '#36cfc9', '#ff7a45', '#ffc53d', '#bae637', '#9254de', '#ff85c0', '#5cdbd3'
-                            ]
-                        }]
-                    },
-                    options: { responsive: true, plugins: { legend: { position: 'top' } } }
-                });
-                // Render bảng dịch vụ
-                const tableData = data.labels.map((label, idx) => ({ label, value: data.values[idx] }))
-                    .sort((a, b) => b.value - a.value);
-                renderTopTable('tableServiceRevenue', tableData, 'Dịch vụ');
+            // Pie chart dịch vụ
+            if (servicePie) servicePie.destroy();
+            servicePie = new Chart(document.getElementById('servicePieChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: serviceData.labels,
+                    datasets: [{
+                        data: serviceData.values,
+                        backgroundColor: [
+                            '#36cfc9', '#ff7a45', '#ffc53d', '#bae637', '#9254de', '#ff85c0', '#5cdbd3'
+                        ]
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'top' } } }
             });
+            const tableService = serviceData.labels.map((label, idx) => ({ label, value: serviceData.values[idx] }))
+                .sort((a, b) => b.value - a.value);
+            renderTopTable('tableServiceRevenue', tableService, 'Dịch vụ');
+            const serviceTotal = serviceData.values.reduce((sum, value) => sum + value, 0);
+            document.getElementById('serviceRevenue').innerText = serviceTotal.toLocaleString('vi-VN');
+
+            // Tổng doanh thu và lãi sau thuế: LẤY TỪ API HÓA ĐƠN
+            fetch(`/Report/GetGrandTotalRevenue?year=${year}&month=${month}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('grandTotalRevenue').innerText = data.grandTotal.toLocaleString('vi-VN');
+                    document.getElementById('profitAfterTax').innerText = Math.round(data.grandTotal * 0.9).toLocaleString('vi-VN');
+                });
+
+            // Pie chart lãi sau thuế
+            const profitRoom = Math.round(roomTotal * 0.9);
+            const profitService = Math.round(serviceTotal * 0.9);
+            if (profitPie) profitPie.destroy();
+            profitPie = new Chart(document.getElementById('profitPieChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Lãi phòng', 'Lãi dịch vụ'],
+                    datasets: [{
+                        data: [profitRoom, profitService],
+                        backgroundColor: ['#1890ff', '#faad14']
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'top' } } }
+            });
+        });
     }
 
     // Lấy tổng số phòng, loại phòng, dịch vụ

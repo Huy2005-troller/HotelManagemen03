@@ -132,14 +132,23 @@ namespace HotelManagement.Controllers
         {
             var order = repo.getOrderPhongByMaPhong(maphong).FirstOrDefault(od => od.TrangThaiThanhToan == 0);
             if (order == null) return NotFound();
-
             var allDichVus = repo.getDichvu.ToList();
-
+            // Đọc lại đồ hỏng từ TempData nếu có
+            List<DoHongViewModel> doHongs = new List<DoHongViewModel>();
+            if (TempData["DoHongs"] != null)
+            {
+                try
+                {
+                    doHongs = JsonConvert.DeserializeObject<List<DoHongViewModel>>(TempData["DoHongs"].ToString());
+                }
+                catch { }
+            }
             return View("thanhToan", new ThanhToanViewModel
             {
                 Order = order,
                 AllDichVus = allDichVus,
-                SelectedDichVus = new List<SelectedDichVuViewModel>()
+                SelectedDichVus = new List<SelectedDichVuViewModel>(),
+                DoHongs = doHongs
             });
         }
                 [HttpPost]
@@ -150,7 +159,10 @@ namespace HotelManagement.Controllers
     string selectedServiceIds,
     string servicePrice,
     string selectedQuantities,
-    string doHongData
+    string doHongData,
+    DateTime? NgayDen,
+    DateTime? NgayDi,
+    string action
 )
         {
             // Debug: Log dữ liệu nhận được
@@ -160,6 +172,17 @@ namespace HotelManagement.Controllers
             Console.WriteLine($"updateThanhToan - servicePrice: {servicePrice}");
             Console.WriteLine($"updateThanhToan - selectedQuantities: {selectedQuantities}");
             Console.WriteLine($"updateThanhToan - doHongData: {doHongData}");
+            Console.WriteLine($"updateThanhToan - NgayDen: {NgayDen}");
+            Console.WriteLine($"updateThanhToan - NgayDi: {NgayDi}");
+
+            // Cập nhật ngày đến/ngày đi cho order
+            var order = repo.getOrderPhongByMaOrder(maorder);
+            if (order != null && NgayDen.HasValue && NgayDi.HasValue)
+            {
+                order.NgayDen = NgayDen.Value;
+                order.NgayDi = NgayDi.Value;
+                repo.updateOrderPhong(order);
+            }
 
             // Xoá toàn bộ dịch vụ cũ trong order
             repo.deleteAllDichVuTrongOrder(maorder);
@@ -168,7 +191,6 @@ namespace HotelManagement.Controllers
             if (!string.IsNullOrEmpty(selectedServiceIds) && !string.IsNullOrEmpty(selectedQuantities) && !string.IsNullOrEmpty(servicePrice))
             {
                 List<string> madichvu = selectedServiceIds.Split(',').ToList();
-                
                 // Parse số lượng với validation
                 List<int> soLuongMoiDichVu = new List<int>();
                 try
@@ -180,7 +202,6 @@ namespace HotelManagement.Controllers
                     TempData["ErrorMessage"] = "Dữ liệu số lượng không hợp lệ!";
                     return RedirectToAction("thanhToan", "Room", new { maphong = maphong });
                 }
-                
                 // Parse giá với validation
                 List<float> giaMoiDichVu = new List<float>();
                 try
@@ -192,14 +213,12 @@ namespace HotelManagement.Controllers
                     TempData["ErrorMessage"] = "Dữ liệu giá không hợp lệ!";
                     return RedirectToAction("thanhToan", "Room", new { maphong = maphong });
                 }
-
                 // Kiểm tra độ dài danh sách
                 if (madichvu.Count != soLuongMoiDichVu.Count || madichvu.Count != giaMoiDichVu.Count)
                 {
                     TempData["ErrorMessage"] = "Dữ liệu không đồng bộ!";
                     return RedirectToAction("thanhToan", "Room", new { maphong = maphong });
                 }
-
                 List<OrderPhongDichVu> danhSachMoi = new List<OrderPhongDichVu>();
                 for (int i = 0; i < madichvu.Count(); i++)
                 {
@@ -214,17 +233,17 @@ namespace HotelManagement.Controllers
                         });
                     }
                 }
-
                 // Lưu lại danh sách mới
                 repo.addOrderPhongDichVu(danhSachMoi);
             }
 
             // Lưu dữ liệu đồ hỏng vào TempData
+            List<DoHongViewModel> doHongs = new List<DoHongViewModel>();
             if (!string.IsNullOrEmpty(doHongData))
             {
                 try
                 {
-                    var doHongs = JsonConvert.DeserializeObject<List<DoHongViewModel>>(doHongData);
+                    doHongs = JsonConvert.DeserializeObject<List<DoHongViewModel>>(doHongData);
                     TempData["DoHongs"] = JsonConvert.SerializeObject(doHongs);
                     Console.WriteLine($"Đã lưu dữ liệu đồ hỏng: {JsonConvert.SerializeObject(doHongs)}");
                 }
@@ -239,8 +258,25 @@ namespace HotelManagement.Controllers
                 Console.WriteLine("Không có dữ liệu đồ hỏng");
             }
 
-            // Quay lại trang thanh toán để tính lại tổng tiền
-            return RedirectToAction("thanhToan", "Room", new { maphong = maphong });
+            // Lấy lại order mới nhất từ DB để truyền vào view (nếu muốn render lại view thay vì redirect)
+            // var updatedOrder = repo.getOrderPhongByMaOrder(maorder);
+            // var allDichVus = repo.getDichvu.ToList();
+            // return View("thanhToan", new ThanhToanViewModel
+            // {
+            //     Order = updatedOrder,
+            //     AllDichVus = allDichVus,
+            //     SelectedDichVus = new List<SelectedDichVuViewModel>()
+            // });
+
+            // Quay lại trang thanh toán để tính lại tổng tiền (redirect để luôn lấy dữ liệu mới nhất từ DB)
+            if (action == "xacNhanThanhToan")
+            {
+                return RedirectToAction("addHoadon", "Room", new { maorder = maorder, tongtien = 0, maphong = maphong });
+            }
+            else
+            {
+                return RedirectToAction("thanhToan", "Room", new { maphong = maphong });
+            }
         }
 
 

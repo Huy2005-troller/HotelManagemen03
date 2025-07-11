@@ -93,6 +93,20 @@ namespace HotelManagement.Controllers
 
             return Json(new { labels, values });
         }
+        // API: Tổng doanh thu từ hóa đơn (theo năm, tháng)
+        [HttpGet]
+        public JsonResult GetGrandTotalRevenue(int year, int month = 0)
+        {
+            var hoaDons = _repo.GetHoaDon
+                .Where(hd => hd.NgayIn.HasValue && hd.NgayIn.Value.Year == year);
+
+            if (month > 0)
+                hoaDons = hoaDons.Where(hd => hd.NgayIn.Value.Month == month);
+
+            var grandTotal = hoaDons.Sum(hd => hd.TongTien);
+
+            return Json(new { grandTotal });
+        }
         // trang lọc theo loại -----------------------------------------------------------------------------
         // Pie chart: Doanh thu từ tiền phòng theo từng loại phòng
         public JsonResult GetRevenueByRoomType(int year, int month = 0)

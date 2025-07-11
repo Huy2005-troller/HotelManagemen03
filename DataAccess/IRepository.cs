@@ -4,6 +4,8 @@ namespace HotelManagement.DataAccess
 {
     public interface IRepository
     {
+        OrderPhong getOrderPhongByMaOrder(string maorder);
+        void updateOrderPhong(OrderPhong order);
         void deleteAllDichVuTrongOrder(string maOrderPhong);
         DichVu getDichvuById(string maDichVu);
 

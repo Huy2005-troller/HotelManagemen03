@@ -4,12 +4,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Thanh toán";
     var tongTienPhong = 0f;
-    if (Model.Order != null)
+    if (Model.Order != null && Model.Order.NgayDen != null && Model.Order.NgayDi != null)
     {
         var ngayden = Model.Order.NgayDen;
         var ngaydi = Model.Order.NgayDi;
         int soNgay = (ngaydi - ngayden)?.Days ?? 0;
-
+        if (soNgay < 0) soNgay = 0;
         tongTienPhong = Model.Order.MaPhongNavigation.MaLoaiPhongNavigation.GiaPhong * soNgay;
     }
 }
@@ -49,34 +49,42 @@ else
             </div>
         </div>
 
-        <div class="card border-info mb-3">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0"><i class="fas fa-bed"></i> Thông tin đặt phòng</h5>
+        <form method="post" asp-action="updateThanhToan" asp-controller="Room" onsubmit="return validateAndUpdateForm(this)" id="thanhToanForm">
+            <input type="hidden" name="maorder" value="@Model.Order.MaOrderPhong" />
+            <input type="hidden" name="maphong" value="@Model.Order.MaPhong" />
+
+            <div class="card border-info mb-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-bed"></i> Thông tin đặt phòng</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Phòng:</strong> @Model.Order.MaPhongNavigation.TenPhong - @String.Format("{0:N0}", Model.Order.MaPhongNavigation.MaLoaiPhongNavigation.GiaPhong) VNĐ/ngày
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Số ngày:</strong> @((Model.Order.NgayDi.GetValueOrDefault() - Model.Order.NgayDen.GetValueOrDefault()).Days) ngày
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <strong>Ngày đến:</strong>
+                            <input type="date" class="form-control" id="ngayDenInput" name="NgayDen"
+                                   value="@Model.Order.NgayDen?.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Ngày đi:</strong>
+                            <input type="date" class="form-control" id="ngayDiInput" name="NgayDi"
+                                   value="@Model.Order.NgayDi?.ToString("yyyy-MM-dd")" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <strong>Tổng tiền phòng:</strong> <span class="text-primary fw-bold tongTienPhong">@String.Format("{0:N0}", tongTienPhong) VNĐ</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <strong>Phòng:</strong> @Model.Order.MaPhongNavigation.TenPhong - @String.Format("{0:N0}", Model.Order.MaPhongNavigation.MaLoaiPhongNavigation.GiaPhong) VNĐ/ngày
-                    </div>
-                    <div class="col-md-6">
-                        <strong>Số ngày:</strong> @((Model.Order.NgayDi.GetValueOrDefault() - Model.Order.NgayDen.GetValueOrDefault()).Days) ngày
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-md-6">
-                        <strong>Ngày đến:</strong> @Model.Order.NgayDen?.ToString("dd/MM/yyyy")
-                    </div>
-                    <div class="col-md-6">
-                        <strong>Ngày đi:</strong> @Model.Order.NgayDi?.ToString("dd/MM/yyyy")
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-md-12">
-                        <strong>Tổng tiền phòng:</strong> <span class="text-primary fw-bold">@String.Format("{0:N0}", tongTienPhong) VNĐ</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <style>
             /* Tăng kích thước checkbox dịch vụ */
@@ -106,46 +114,35 @@ else
                 z-index: 2;
             }
         </style>
-        <form method="post" asp-action="updateThanhToan" asp-controller="Room" onsubmit="return validateAndUpdateForm(this)" id="thanhToanForm">
-            <input type="hidden" name="maorder" value="@Model.Order.MaOrderPhong" />
-            <input type="hidden" name="maphong" value="@Model.Order.MaPhong" />
-
-            <div class="card border-warning mb-3">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0"><i class="fas fa-concierge-bell"></i> Chọn dịch vụ</h5>
-                </div>
-                <div class="card-body">
-                    <div class="dichvu-scroll-wrapper">
-                        <table class="table" id="dichVuTable">
-                            <thead>
-                                <tr>
-                                    <th>Chọn</th>
-                                    <th>Tên dịch vụ</th>
-                                    <th>Giá dịch vụ</th>
-                                    <th>Số lượng</th>
-                                    <th>Tổng</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var dv in Model.AllDichVus)
-                                {
-                                    var existing = Model.Order.OrderPhongDichVus.FirstOrDefault(x => x.MaDichVu == dv.MaDichVu);
-                                    var isChecked = existing != null;
-                                    var quantity = existing?.SoLuong ?? 1;
-                                    <tr>
-                                        <td><input type="checkbox" class="checkbox" data-gia="@dv.GiaDichVu" name="isSelected" @(isChecked ? "checked" : "") /></td>
-                                        <td class="madichvu" data-madichvu="@dv.MaDichVu">@dv.TenDichVu</td>
-                                        <td>@String.Format("{0:N0}", dv.GiaDichVu)</td>
-                                        <td><input type="number" class="form-control quantity" data-gia="@dv.GiaDichVu" name="quantities" value="@quantity" min="0" max="999" /></td>
-                                        <td class="total">@(isChecked ? String.Format("{0:N0}", dv.GiaDichVu * quantity) : "0")</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="tongTien fw-bold text-warning">Tổng tiền dịch vụ: <strong>0</strong></div>
-                </div>
+            <div class="dichvu-scroll-wrapper">
+                <table class="table" id="dichVuTable">
+                    <thead>
+                        <tr>
+                            <th>Chọn</th>
+                            <th>Tên dịch vụ</th>
+                            <th>Giá dịch vụ</th>
+                            <th>Số lượng</th>
+                            <th>Tổng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var dv in Model.AllDichVus)
+                        {
+                            var existing = Model.Order.OrderPhongDichVus.FirstOrDefault(x => x.MaDichVu == dv.MaDichVu);
+                            var isChecked = existing != null;
+                            var quantity = existing?.SoLuong ?? 1;
+                            <tr>
+                                <td><input type="checkbox" class="checkbox" data-gia="@dv.GiaDichVu" name="isSelected" @(isChecked ? "checked" : "") /></td>
+                                <td class="madichvu" data-madichvu="@dv.MaDichVu">@dv.TenDichVu</td>
+                                <td>@String.Format("{0:N0}", dv.GiaDichVu)</td>
+                                <td><input type="number" class="form-control quantity" data-gia="@dv.GiaDichVu" name="quantities" value="@quantity" min="0" max="999" /></td>
+                                <td class="total">@(isChecked ? String.Format("{0:N0}", dv.GiaDichVu * quantity) : "0")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
+            <div class="tongTien fw-bold text-warning">Tổng tiền dịch vụ: <strong>0</strong></div>
 
             <input type="hidden" name="selectedServiceIds" id="selectedServiceIds" />
             <input type="hidden" name="servicePrice" id="servicePrice" />
@@ -220,36 +217,39 @@ else
             
             <div class="totalAll fw-bold fs-3 text-success mt-3">Tổng tất cả: 0</div>
             <br >
-            <button type="submit" class="btn btn-warning">Lưu chỉnh sửa</button>
-            <a class="btn btn-success" asp-action="addHoadon" asp-route-maorder="@Model.Order.MaOrderPhong" asp-route-tongtien="@(tongTienPhong)" asp-route-maphong="@Model.Order.MaPhong" id="btnThanhToan">Xác nhận thanh toán</a>
+            <button type="submit" name="action" value="luuChinhSua" class="btn btn-warning">Lưu chỉnh sửa</button>
+            <button type="submit" name="action" value="xacNhanThanhToan" class="btn btn-success">Xác nhận thanh toán</button>
         </form>
     </div>
 }
 
+@if (Model.DoHongs != null && Model.DoHongs.Any())
+{
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var doHongs = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.DoHongs));
+            if (doHongs && doHongs.length > 0) {
+                document.getElementById('soLuongDoHong').value = doHongs.length;
+                taoSlotDoHong();
+                // Gán lại giá trị cho từng slot
+                doHongs.forEach(function(item, i) {
+                    document.querySelector('.tenDoHong[data-index="' + i + '"]').value = item.TenDoHong;
+                    document.querySelector('.soLuongDoHong[data-index="' + i + '"]').value = item.SoLuong;
+                    document.querySelector('.donGiaDoHong[data-index="' + i + '"]').value = item.DonGia;
+                    calculateDoHongTotal(document.querySelector('.soLuongDoHong[data-index="' + i + '"]'));
+                });
+                calculateTotals();
+            }
+        });
+    </script>
+}
 
 @section Scripts {
     <script>
         function validateAndUpdateForm(form) {
-            // Kiểm tra xem có ít nhất một dịch vụ được chọn không
+            // Bỏ kiểm tra bắt buộc phải chọn dịch vụ
+            // Chỉ kiểm tra số lượng dịch vụ >= 0
             var checkedBoxes = form.querySelectorAll('.checkbox:checked');
-            var hasValidService = false;
-
-            for (var checkbox of checkedBoxes) {
-                var row = checkbox.closest('tr');
-                var quantity = row.querySelector('.quantity');
-                var qty = parseInt(quantity.value) || 0;
-                if (qty >= 0) {
-                    hasValidService = true;
-                    break;
-                }
-            }
-
-            if (!hasValidService) {
-                alert('Vui lòng chọn ít nhất một dịch vụ với số lượng lớn hơn hoặc bằng 0 !');
-                return false;
-            }
-
-            // Kiểm tra số lượng của các dịch vụ được chọn
             for (var checkbox of checkedBoxes) {
                 var row = checkbox.closest('tr');
                 var quantity = row.querySelector('.quantity');
@@ -260,7 +260,6 @@ else
                     return false;
                 }
             }
-
             // Kiểm tra đồ hỏng
             var doHongInputs = form.querySelectorAll('.tenDoHong');
             for (var input of doHongInputs) {
@@ -268,13 +267,11 @@ else
                 var index = input.getAttribute('data-index');
                 var soLuong = parseInt(form.querySelector(`.soLuongDoHong[data-index="${index}"]`).value) || 0;
                 var donGia = parseFloat(form.querySelector(`.donGiaDoHong[data-index="${index}"]`).value) || 0;
-
                 if (ten && (soLuong <= 0 || donGia < 0)) {
                     alert('Vui lòng nhập đầy đủ thông tin đồ hỏng !');
                     return false;
                 }
             }
-
             var result = updateSelectedData(form);
             console.log('Form validation result:', result);
             return result;
@@ -624,5 +621,23 @@ else
                 console.error('Không tìm thấy hidden field doHongData');
             }
         }
+
+        function updateSoNgayVaTienPhong() {
+            var giaPhong = @Model.Order.MaPhongNavigation.MaLoaiPhongNavigation.GiaPhong;
+            var ngayDen = new Date(document.getElementById('ngayDenInput').value);
+            var ngayDi = new Date(document.getElementById('ngayDiInput').value);
+            var soNgay = (ngayDi - ngayDen) / (1000 * 60 * 60 * 24);
+            if (soNgay < 0 || isNaN(soNgay)) soNgay = 0;
+            // Nếu có chỗ hiển thị số ngày riêng thì cập nhật, nếu không thì bỏ dòng này
+            // document.querySelector('.soNgay').innerText = soNgay + ' ngày';
+            document.querySelector('.tongTienPhong').innerText = (giaPhong * soNgay).toLocaleString('vi-VN') + ' VNĐ';
+            var tienPhongEls = document.querySelectorAll('.tienPhong');
+            tienPhongEls.forEach(function(el) {
+                el.innerText = (giaPhong * soNgay).toLocaleString('vi-VN') + ' VNĐ';
+            });
+        }
+        document.getElementById('ngayDenInput').addEventListener('change', updateSoNgayVaTienPhong);
+        document.getElementById('ngayDiInput').addEventListener('change', updateSoNgayVaTienPhong);
+        window.addEventListener('DOMContentLoaded', updateSoNgayVaTienPhong);
     </script>
 }

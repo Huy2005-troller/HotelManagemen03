@@ -7,6 +7,7 @@ namespace HotelManagement.Models
 {
     public partial class HotelContext : DbContext
     {
+
         public HotelContext()
         {
         }

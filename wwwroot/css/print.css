@@ -1,0 +1,14 @@
+﻿@media print {
+    .navbar, .header, .nav, .top-bar, .main-header, .footer, .menu, .print-hide {
+        display: none !important;
+    }
+
+    .btn, .print-hide {
+        display: none !important;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+}
