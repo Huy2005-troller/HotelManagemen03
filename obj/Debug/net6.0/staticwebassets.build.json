@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Gtyq5HNkfvA/AEPht5tlagoQJk1KFpLLRTYW5dsMybk=",
+  "Hash": "RUuqdMP9iXttIeIMtBB+3l5uwFnFfZkkqtwW8fIghbE=",
   "Source": "HotelManagement",
   "BasePath": "_content/HotelManagement",
   "Mode": "Default",
@@ -72,6 +72,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\print.css"
+    },
+    {
+      "Identity": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\css\\printVeXe.css",
+      "SourceId": "HotelManagement",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\",
+      "BasePath": "_content/HotelManagement",
+      "RelativePath": "css/printVeXe.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\printVeXe.css"
     },
     {
       "Identity": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\css\\site.css",

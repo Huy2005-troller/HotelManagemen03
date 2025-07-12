@@ -1,0 +1,238 @@
+@model IEnumerable<HotelManagement.Models.Xe>
+@{
+    ViewData["Title"] = "Danh sách xe";
+    var loaiXeList = ViewBag.LoaiXeList as List<SelectListItem>;
+    var trangThaiXeList = ViewBag.TrangThaiXeList as List<SelectListItem>;
+    string selectedLoaiXe = ViewBag.SelectedLoaiXe as string;
+    string selectedTrangThaiXe = ViewBag.SelectedTrangThaiXe as string;
+}
+<h1>Danh sách xe</h1>
+<form method="get" class="mb-3">
+    <div class="row">
+        <div class="col-md-3">
+            <select name="loaiXe" class="form-select">
+                <option value="">Tất cả loại xe</option>
+                @if (loaiXeList != null)
+                {
+                    foreach (var lx in loaiXeList)
+                    {
+                        <option value="@lx.Value" selected="@(selectedLoaiXe == lx.Value ? "selected" : null)">@lx.Text</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="trangThaiXe" class="form-select">
+                <option value="">Tất cả trạng thái</option>
+                @if (trangThaiXeList != null)
+                {
+                    foreach (var ttx in trangThaiXeList)
+                    {
+                        <option value="@ttx.Value" selected="@(selectedTrangThaiXe == ttx.Value ? "selected" : null)">@ttx.Text</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Lọc</button>
+        </div>
+    </div>
+</form>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.TenXe)</th>
+            <th>@Html.DisplayNameFor(model => model.BienSo)</th>
+            <th>@Html.DisplayNameFor(model => model.GiaTien1Km)</th>
+            <th>@Html.DisplayNameFor(model => model.TenTaiXe)</th>
+            <th>@Html.DisplayNameFor(model => model.CCCDTaiXe)</th>
+            <th>@Html.DisplayNameFor(model => model.SDTTaiXe)</th>
+            <th>@Html.DisplayNameFor(model => model.LoaiXe)</th>
+            <th>@Html.DisplayNameFor(model => model.TrangThaiXe)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.TenXe)</td>
+            <td>@Html.DisplayFor(modelItem => item.BienSo)</td>
+            <td>@Html.DisplayFor(modelItem => item.GiaTien1Km)</td>
+            <td>@Html.DisplayFor(modelItem => item.TenTaiXe)</td>
+            <td>@Html.DisplayFor(modelItem => item.CCCDTaiXe)</td>
+            <td>@Html.DisplayFor(modelItem => item.SDTTaiXe)</td>
+            <td>@item.LoaiXe?.TenLoaiXe</td>
+            <td>@item.TrangThaiXe?.TenTrangThai</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#datXeModal" data-xeid="@item.Id">Đặt xe</button>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<!-- Modal đặt xe -->
+<div class="modal fade" id="datXeModal" tabindex="-1" aria-labelledby="datXeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="datXeModalLabel">Đặt xe</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formDatXe" method="post" asp-action="DatXe">
+          <input type="hidden" id="xeId" name="XeId" />
+          <div class="mb-2">
+            <label>Họ tên khách</label>
+            <input type="text" class="form-control" id="tenKhach" name="TenKhach" />
+          </div>
+          <div class="mb-2">
+            <label>CCCD khách</label>
+            <input type="text" class="form-control" id="cccdKhach" name="CCCDKhach" />
+          </div>
+          <div class="mb-2">
+            <label>SĐT khách</label>
+            <input type="text" class="form-control" id="sdtKhach" name="SDTKhach" />
+          </div>
+          <div class="mb-2">
+            <label>Điểm đi (A)</label>
+            <input type="text" class="form-control" id="diemA" name="diemA" placeholder="Nhập địa chỉ hoặc chọn trên bản đồ" />
+          </div>
+          <div class="mb-2">
+            <label>Điểm đến (B)</label>
+            <input type="text" class="form-control" id="diemB" name="diemB" placeholder="Nhập địa chỉ hoặc chọn trên bản đồ" />
+          </div>
+          <div class="mb-2">
+            <label>Bản đồ tuyến đường</label>
+            <div id="map" style="height: 250px;"></div>
+          </div>
+          <div class="mb-2">
+            <label>Khoảng cách (km)</label>
+              <input type="number" step="0.01" class="form-control" id="khoangCach" name="khoangCach" readonly />
+          </div>
+          <div class="mb-2">
+            <label>Giá tiền (VNĐ)</label>
+            <input type="text" class="form-control" id="giaTien" name="giaTien" readonly />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button type="submit" form="formDatXe" class="btn btn-primary">In vé xe</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    let map, markerA, markerB, routeLayer;
+        let orsApiKey = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjQwZjVlMzYyYjhkNTQwMjRhOTQyYmVjYmUxZDcwMzM4IiwiaCI6Im11cm11cjY0In0='; // Thay bằng key thật
+
+    function initMap() {
+        if (!map) {
+            map = L.map('map').setView([16.047079, 108.206230], 13); // Đà Nẵng mặc định
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(map);
+        }
+        if (routeLayer) {
+            map.removeLayer(routeLayer);
+            routeLayer = null;
+        }
+        if (markerA) { map.removeLayer(markerA); markerA = null; }
+        if (markerB) { map.removeLayer(markerB); markerB = null; }
+    }
+
+    function geocode(address, callback) {
+        fetch(`https://api.openrouteservice.org/geocode/search?api_key=${orsApiKey}&text=${encodeURIComponent(address)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.features && data.features.length > 0) {
+                    let [lng, lat] = data.features[0].geometry.coordinates;
+                    callback([lat, lng]);
+                } else {
+                    callback(null);
+                }
+            });
+    }
+
+    function calcRouteAndDistance() {
+        let diemA = document.getElementById('diemA').value;
+        let diemB = document.getElementById('diemB').value;
+        if (!diemA || !diemB) return;
+
+        geocode(diemA, function(coordA) {
+            if (!coordA) return;
+            geocode(diemB, function(coordB) {
+                if (!coordB) return;
+                if (!map) initMap();
+                map.setView(coordA, 13);
+                if (markerA) map.removeLayer(markerA);
+                if (markerB) map.removeLayer(markerB);
+                markerA = L.marker(coordA).addTo(map).bindPopup('Điểm đi').openPopup();
+                markerB = L.marker(coordB).addTo(map).bindPopup('Điểm đến').openPopup();
+
+                // Gọi ORS directions
+                fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': orsApiKey,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        coordinates: [
+                            [coordA[1], coordA[0]],
+                            [coordB[1], coordB[0]]
+                        ]
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (routeLayer) map.removeLayer(routeLayer);
+                    routeLayer = L.geoJSON(data).addTo(map);
+                    let distance = data.features[0].properties.summary.distance / 1000; // km
+                    document.getElementById('khoangCach').value = distance.toFixed(2);
+                    // Tính giá tiền
+                    let giaTien1Km = parseFloat(document.getElementById('giaTien').dataset.giatien1km || '0');
+                    document.getElementById('giaTien').value = Math.round(distance * giaTien1Km).toLocaleString('vi-VN');
+                });
+            });
+        });
+    }
+
+    document.getElementById('diemA').addEventListener('blur', calcRouteAndDistance);
+    document.getElementById('diemB').addEventListener('blur', calcRouteAndDistance);
+    document.getElementById('datXeModal').addEventListener('shown.bs.modal', function () {
+        setTimeout(initMap, 300);
+    });
+
+    // Đặt xe: tự động điền thông tin khách nếu có
+    document.querySelectorAll('button[data-bs-target="#datXeModal"]').forEach(btn => {
+        btn.addEventListener('click', function () {
+            var xeId = this.getAttribute('data-xeid');
+            document.getElementById('xeId').value = xeId;
+            var row = this.closest('tr');
+            var giaTien1Km = row.children[2].innerText.trim();
+            document.getElementById('giaTien').value = "";
+            document.getElementById('khoangCach').value = "";
+            document.getElementById('giaTien').dataset.giatien1km = giaTien1Km;
+            fetch('/Xe/GetCurrentUserInfo')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('tenKhach').value = data.hoTen || '';
+                    document.getElementById('cccdKhach').value = data.cccd || '';
+                    document.getElementById('sdtKhach').value = data.sdt || '';
+                });
+        });
+    });
+       
+</script>
+}

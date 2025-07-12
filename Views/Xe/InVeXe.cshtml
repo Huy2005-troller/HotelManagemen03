@@ -1,0 +1,52 @@
+@model HotelManagement.Models.HoaDonDatXe
+@{
+    ViewData["Title"] = "In vé xe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/printVeXe.css" media="print" />
+}
+
+<div class="container mt-4" id="printArea">
+    <h2 class="text-center">VÉ XE</h2>
+    <hr />
+    <div class="row mb-2">
+        <div class="col-md-6">
+            <strong>Thời gian tạo:</strong> @Model.ThoiGianTao.ToString("dd/MM/yyyy HH:mm")
+        </div>
+        <div class="col-md-6 text-end">
+            <strong>Mã vé:</strong> @Model.Id
+        </div>
+    </div>
+    <h4>Thông tin xe</h4>
+    <ul>
+        <li><strong>Tên xe:</strong> @Model.TenXe</li>
+        <li><strong>Biển số:</strong> @Model.BienSo</li>
+        <li><strong>Tài xế:</strong> @Model.TenTaiXe</li>
+        <!-- <li><strong>CCCD tài xế:</strong> @Model.CCCDTaiXe</li> -->
+        <li><strong>SĐT tài xế:</strong> @Model.SDTTaiXe</li>
+    </ul>
+    <h4>Thông tin khách</h4>
+    <ul>
+        <li><strong>Họ tên:</strong> @Model.TenKhach</li>
+        <!-- <li><strong>CCCD:</strong> @Model.CCCDKhach</li> -->
+        <li><strong>SĐT:</strong> @Model.SDTKhach</li>
+    </ul>
+    <h4>Thông tin chuyến đi</h4>
+    <ul>
+        <li><strong>Điểm đi:</strong> @Model.DiemA</li>
+        <li><strong>Điểm đến:</strong> @Model.DiemB</li>
+        <li><strong>Khoảng cách:</strong> @Model.KhoangCach.ToString("N2") km</li>
+        <li><strong>Đơn giá:</strong> @Model.DonGia.ToString("N0") VNĐ/km</li>
+        @{
+            var tongTienSauThue = Model.TongTien * 1.08m;
+        }
+        <li><strong>Tổng tiền trước thuế:</strong> @Model.TongTien.ToString("N0") VNĐ</li>
+        <li><strong>Tổng tiền sau thuế (VAT 8%):</strong> <span class="text-danger fw-bold">@tongTienSauThue.ToString("N0") VNĐ</span></li>
+    </ul>
+    <div class="text-center mt-4">
+        <button class="btn btn-primary no-print" onclick="window.print()">In vé xe</button>
+        <a href="/Xe" class="btn btn-secondary no-print">Quay lại danh sách xe</a>
+    </div>
+</div>
+

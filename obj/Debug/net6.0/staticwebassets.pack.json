@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets\\css\\print.css"
     },
     {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\css\\printVeXe.css",
+      "PackagePath": "staticwebassets\\css\\printVeXe.css"
+    },
+    {
       "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },

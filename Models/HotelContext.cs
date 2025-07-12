@@ -32,6 +32,10 @@ namespace HotelManagement.Models
         public virtual DbSet<TaiKhoan> TaiKhoans { get; set; } = null!;
         public virtual DbSet<TrangThaiPhong> TrangThaiPhongs { get; set; } = null!;
         public virtual DbSet<VaiTro> VaiTros { get; set; } = null!;
+        public virtual DbSet<LoaiXe> LoaiXes { get; set; } = null!;
+        public virtual DbSet<TrangThaiXe> TrangThaiXes { get; set; } = null!;
+        public virtual DbSet<Xe> Xes { get; set; } = null!;
+        public virtual DbSet<HoaDonDatXe> HoaDonDatXes { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

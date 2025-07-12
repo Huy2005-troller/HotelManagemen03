@@ -4,13 +4,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 namespace HotelManagement
 {
     public class Program
     {
         public static void Main(string[] args)
         {
+            var cultureInfo = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddSession();
