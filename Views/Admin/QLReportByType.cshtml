@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="row mb-4">
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card text-center border-info mb-2">
             <div class="card-body">
                 <h5 class="card-title">Tổng số phòng</h5>
@@ -11,7 +11,15 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
+        <div class="card text-center border-primary mb-2">
+            <div class="card-body">
+                <h5 class="card-title">Phòng đang thuê</h5>
+                <h2 id="occupiedRoom" class="text-primary">0</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
         <div class="card text-center border-success mb-2">
             <div class="card-body">
                 <h5 class="card-title">Tổng số loại phòng</h5>
@@ -322,5 +330,16 @@
             document.getElementById('totalRoom').innerText = data.totalRoom;
             document.getElementById('totalRoomType').innerText = data.totalRoomType;
             document.getElementById('totalService').innerText = data.totalService;
+        });
+
+    // Lấy số phòng đang được thuê
+    fetch('/api/Report/GetOccupiedRoomCount')
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('occupiedRoom').innerText = data.occupiedRoomCount;
+        })
+        .catch(error => {
+            console.error('Lỗi khi lấy số phòng đang thuê:', error);
+            document.getElementById('occupiedRoom').innerText = '0';
         });
 </script>

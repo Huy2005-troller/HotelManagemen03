@@ -22,9 +22,13 @@ namespace HotelManagement.Controllers
 
         [HttpGet]
 
-        public IActionResult Index(string loaiphong = null, string trangthaiphong = null, bool error = true)
+        public IActionResult Index(string loaiphong = null, string trangthaiphong = null, string tenphong = null, bool error = true)
         {
-            if (loaiphong == null && trangthaiphong == null) treetable.phongs = repo.getPhongByLoaiPhong(null);
+            if (!string.IsNullOrEmpty(tenphong))
+            {
+                treetable.phongs = repo.getPhongByTenPhong(tenphong);
+            }
+            else if (loaiphong == null && trangthaiphong == null) treetable.phongs = repo.getPhongByLoaiPhong(null);
             else if (loaiphong == null) treetable.phongs = repo.getPhongByMaTrangThai(trangthaiphong);
             else if (trangthaiphong == null) treetable.phongs = repo.getPhongByLoaiPhong(loaiphong);
 

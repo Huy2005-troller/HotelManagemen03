@@ -216,5 +216,83 @@ namespace HotelManagement.Controllers
 
             return Json(new { labels, values });
         }
+
+        // API: Lấy số lượng phòng đang thuê
+        [HttpGet]
+        [Route("api/Report/GetOccupiedRoomCount")]
+        public JsonResult GetOccupiedRoomCount()
+        {
+            var occupiedRoomCount = _repo.GetOccupiedRoomCount();
+            return Json(new { occupiedRoomCount });
+        }
+        // trang thống kê sử dụng phòng-----------------------------------------------------------------------------
+        public IActionResult ThongKeSuDungPhong()
+        {
+            return View("~/Views/Admin/ThongKeSuDungPhong.cshtml");
+        }
+        [HttpGet]
+        public JsonResult GetRoomCountByType()
+        {
+            // Lấy danh sách phòng và loại phòng, join lại để đếm
+            var loaiPhongs = _repo.getLoaiPhong.ToList();
+            var phongs = _repo.getPhongByLoaiPhong(null).ToList();
+
+            var data = loaiPhongs
+                .Select(lp => new {
+                    LoaiPhong = lp.TenLoaiPhong,
+                    SoPhong = phongs.Count(p => p.MaLoaiPhong == lp.MaLoaiPhong)
+                }).ToList();
+
+            return Json(data);
+        }
+        [HttpGet]
+        public JsonResult GetMostLeastRentedRoom(int year, int month = 0)
+        {
+            var orders = _repo.getOrderPhongByMaPhong(null)
+                .Where(o => o.NgayDen.HasValue && o.NgayDen.Value.Year == year);
+            if (month > 0)
+                orders = orders.Where(o => o.NgayDen.Value.Month == month);
+
+            var data = orders
+                .GroupBy(o => o.MaPhongNavigation.TenPhong)
+                .Select(g => new { TenPhong = g.Key, SoLanThue = g.Count() })
+                .OrderByDescending(x => x.SoLanThue)
+                .ToList();
+
+            return Json(data);
+        }
+        [HttpGet]
+        public JsonResult GetMostLeastRentedRoomType(int year, int month = 0)
+        {
+            var orders = _repo.getOrderPhongByMaPhong(null)
+                .Where(o => o.NgayDen.HasValue && o.NgayDen.Value.Year == year);
+            if (month > 0)
+                orders = orders.Where(o => o.NgayDen.Value.Month == month);
+
+            var data = orders
+                .GroupBy(o => o.MaPhongNavigation.MaLoaiPhongNavigation.TenLoaiPhong)
+                .Select(g => new { LoaiPhong = g.Key, SoLanThue = g.Count() })
+                .OrderByDescending(x => x.SoLanThue)
+                .ToList();
+
+            return Json(data);
+        }
+        [HttpGet]
+        public JsonResult GetMostLeastUsedService(int year, int month = 0)
+        {
+            var orders = _repo.getOrderPhongByMaPhong(null)
+                .Where(o => o.NgayDen.HasValue && o.NgayDen.Value.Year == year);
+            if (month > 0)
+                orders = orders.Where(o => o.NgayDen.Value.Month == month);
+
+            var data = orders
+                .SelectMany(o => o.OrderPhongDichVus)
+                .GroupBy(dv => dv.MaDichVuNavigation.TenDichVu)
+                .Select(g => new { TenDichVu = g.Key, SoLanChon = g.Sum(x => x.SoLuong) })
+                .OrderByDescending(x => x.SoLanChon)
+                .ToList();
+
+            return Json(data);
+        }
     }
 }

@@ -1,0 +1,483 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<head>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+</head>
+<style>
+body, .stat-table, .chart-fixed, .pie-col, .chart-col {
+    font-family: 'Roboto', Arial, sans-serif !important;
+}
+.stat-table {
+    border-collapse: collapse;
+    width: 400px;
+    min-width: 400px;
+    max-width: 400px;
+    margin-bottom: 20px;
+    background: #f8fcff;
+    box-shadow: 0 2px 8px #eee;
+}
+.stat-table th, .stat-table td {
+    border: 1px solid #bce0ee;
+    padding: 10px 16px;
+    text-align: center;
+}
+.stat-table th {
+    background: #1dc6e6;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+}
+.stat-table tr:nth-child(even) {
+    background: #eaf8ff;
+}
+.stat-table tr:hover {
+    background: #bce0ee;
+}
+h2, h3 {
+    color: #1dc6e6;
+    margin-top: 24px;
+}
+.flex-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+    justify-content: flex-start;
+}
+.chart-fixed {
+    width: 400px !important;
+    height: 400px !important;
+    font-size: initial !important;
+    display: block;
+    margin: 0 auto;
+}
+.pie-col, .chart-col {
+    min-width: 400px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pie-chart-container {
+    width: 500px;
+    height: 500px;
+    position: relative;
+    margin: 0 auto;
+}
+.pie-chart-large {
+    width: 100% !important;
+    height: 100% !important;
+    font-size: 15px !important;
+}
+.chartjs-render-monitor {
+    font-family: 'Roboto', Arial, sans-serif !important;
+    font-size: 15px !important;
+}
+/* Thêm style cho ô tổng quan */
+.summary-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+    margin-top: 16px;
+}
+.summary-box {
+    flex: 1;
+    border: 2px solid #1dc6e6;
+    border-radius: 10px;
+    background: #fff;
+    text-align: center;
+    padding: 18px 0 10px 0;
+    min-width: 180px;
+    box-shadow: 0 2px 8px #eee;
+}
+.summary-box .summary-title {
+    font-size: 20px;
+    color: #222;
+    margin-bottom: 8px;
+}
+.summary-box .summary-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #1dc6e6;
+    margin-bottom: 0;
+}
+.summary-box.blue { border-color: #1dc6e6; }
+.summary-box.green { border-color: #52c41a; }
+.summary-box.orange { border-color: #faad14; }
+.summary-box.purple { border-color: #722ed1; }
+.summary-box .summary-value.blue { color: #1dc6e6; }
+.summary-box .summary-value.green { color: #52c41a; }
+.summary-box .summary-value.orange { color: #faad14; }
+.summary-box .summary-value.purple { color: #722ed1; }
+</style>
+
+@{
+    ViewBag.Title = "Thống kê sử dụng phòng";
+}
+
+<!-- Ô tổng quan -->
+<div class="summary-row">
+    <div class="summary-box blue">
+        <div class="summary-title">Tổng số phòng</div>
+        <div id="totalRoom" class="summary-value blue">0</div>
+    </div>
+    <div class="summary-box purple">
+        <div class="summary-title">Phòng đang thuê</div>
+        <div id="occupiedRoom" class="summary-value purple">0</div>
+    </div>
+    <div class="summary-box green">
+        <div class="summary-title">Tổng số loại phòng</div>
+        <div id="totalRoomType" class="summary-value green">0</div>
+    </div>
+    <div class="summary-box orange">
+        <div class="summary-title">Tổng số dịch vụ</div>
+        <div id="totalService" class="summary-value orange">0</div>
+    </div>
+</div>
+
+<h2>Thống kê     phòng</h2>
+
+<div>
+    <label>Chọn năm:</label>
+    <select id="yearSelect"></select>
+    <label>Chọn tháng:</label>
+    <select id="monthSelect">
+        <option value="0">Tất cả</option>
+        @for (int i = 1; i <= 12; i++)
+        {
+            <option value="@i">Tháng @i</option>
+        }
+    </select>
+    <button onclick="loadAllStats()">Xem thống kê</button>
+</div>
+
+<hr>
+<h3>Số lượng phòng theo từng loại</h3>
+<div class="flex-row">
+    <table class="stat-table" id="roomTypeCount">
+        <thead>
+            <tr>
+                <th>Loại phòng</th>
+                <th>Số phòng</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div class="chart-col">
+        <canvas id="roomTypeChart" class="chart-fixed" width="400" height="400"></canvas>
+    </div>
+    <div class="pie-col">
+        <canvas id="roomTypePieChart" class="chart-fixed" width="400" height="400"></canvas>
+    </div>
+</div>
+
+<h3>Số lần Phòng được thuê </h3>
+<div class="flex-row">
+    <table class="stat-table" id="mostLeastRoomTable">
+        <thead>
+            <tr>
+                <th>Tên phòng</th>
+                <th>Số lần thuê</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div class="chart-col">
+        <canvas id="mostLeastRoomChart" width="400" height="250"></canvas>
+    </div>
+    <div class="pie-col">
+        <div class="pie-chart-container">
+            <canvas id="mostLeastRoomPieChart" class="pie-chart-large"></canvas>
+        </div>
+    </div>
+</div>
+
+<h3>Số lần Loại phòng được thuê</h3>
+<div class="flex-row">
+    <table class="stat-table" id="mostLeastRoomTypeTable">
+        <thead>
+            <tr>
+                <th>Loại phòng</th>
+                <th>Số lần thuê</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div class="chart-col">
+        <canvas id="mostLeastRoomTypeChart" width="400" height="250"></canvas>
+    </div>
+    <div class="pie-col">
+        <div class="pie-chart-container">
+            <canvas id="mostLeastRoomTypePieChart" class="pie-chart-large"></canvas>
+        </div>
+    </div>
+</div>
+
+<h3>Số lần dịch vụ được chọn </h3>
+<div class="flex-row">
+    <table class="stat-table" id="mostLeastServiceTable">
+        <thead>
+            <tr>
+                <th>Tên dịch vụ</th>
+                <th>Số lần chọn</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div class="chart-col">
+        <canvas id="mostLeastServiceChart" width="400" height="250"></canvas>
+    </div>
+    <div class="pie-col">
+        <div class="pie-chart-container">
+            <canvas id="mostLeastServicePieChart" class="pie-chart-large"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script>
+function renderBarChart(canvasId, labels, data, label) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    if (window[canvasId + 'Obj']) window[canvasId + 'Obj'].destroy();
+    window[canvasId + 'Obj'] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: label,
+                data: data,
+                backgroundColor: '#36cfc9',
+                borderRadius: 8,
+                maxBarThickness: 32,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: false,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                datalabels: { display: false },
+                tooltip: {
+                    bodyFont: {
+                        size: 14,
+                        family: "'Roboto', Arial, sans-serif"
+                    },
+                    titleFont: {
+                        size: 16,
+                        family: "'Roboto', Arial, sans-serif"
+                    }
+                }
+            },
+            scales: {
+                x: { beginAtZero: true }
+            }
+        }
+    });
+}
+
+function renderPieChart(canvasId, labels, data, label) {
+    if (window[canvasId + 'Obj']) {
+        window[canvasId + 'Obj'].destroy();
+        window[canvasId + 'Obj'] = undefined;
+    }
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    const total = data.reduce((a, b) => a + b, 0);
+    const backgroundColors = [
+        '#36cfc9', '#ff7a45', '#ffc53d', '#bae637', '#9254de', 
+        '#ff85c0', '#5cdbd3', '#1890ff', '#faad14', '#ff4d4f',
+        '#13c2c2', '#eb2f96', '#52c41a', '#fadb14', '#722ed1'
+    ];
+    window[canvasId + 'Obj'] = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: label,
+                data: data,
+                backgroundColor: backgroundColors,
+                borderColor: '#fff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        font: {
+                            family: "'Roboto', Arial, sans-serif",
+                            size: 14,
+                            weight: 'normal'
+                        },
+                        padding: 20,
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                },
+                datalabels: {
+                    color: '#222',
+                    font: {
+                        family: "'Roboto', Arial, sans-serif",
+                        size: 15,
+                        weight: 'bold'
+                    },
+                    formatter: (value, context) => {
+                        if (!total) return '0%';
+                        const percent = (value * 100 / total).toFixed(1);
+                        return percent + '%';
+                    },
+                    anchor: 'center',
+                    align: 'center',
+                    clip: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const value = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percent = total ? (value * 100 / total).toFixed(1) : 0;
+                            return `${context.label}: ${percent}% (${value})`;
+                        }
+                    },
+                    bodyFont: {
+                        family: "'Roboto', Arial, sans-serif",
+                        size: 14
+                    },
+                    titleFont: {
+                        family: "'Roboto', Arial, sans-serif",
+                        size: 16,
+                        weight: 'bold'
+                    }
+                }
+            },
+            cutout: '0%',
+            radius: '90%'
+        },
+        plugins: [ChartDataLabels]
+    });
+    setTimeout(() => {
+        if (window[canvasId + 'Obj']) {
+            window[canvasId + 'Obj'].update();
+        }
+    }, 100);
+}
+
+function loadYears() {
+    $.get('/Report/GetAvailableYears', function(years) {
+        var yearSelect = $('#yearSelect');
+        yearSelect.empty();
+        years.forEach(function(y) {
+            yearSelect.append('<option value="' + y + '">' + y + '</option>');
+        });
+    });
+}
+function loadAllStats() {
+    var year = $('#yearSelect').val();
+    var month = $('#monthSelect').val();
+
+    // Số lượng phòng theo loại
+    $.get('/Report/GetRoomCountByType', function(data) {
+        var tbody = $('#roomTypeCount tbody');
+        tbody.empty();
+        var labels = [], values = [];
+        data.forEach(function(row) {
+            tbody.append('<tr><td>' + row.loaiPhong + '</td><td>' + row.soPhong + '</td></tr>');
+            labels.push(row.loaiPhong);
+            values.push(row.soPhong);
+        });
+        renderBarChart('roomTypeChart', labels, values, 'Số phòng');
+        renderPieChart('roomTypePieChart', labels, values, 'Tỉ lệ số phòng');
+    });
+
+    // Phòng thuê nhiều nhất/ít nhất
+    $.get('/Report/GetMostLeastRentedRoom', { year: year, month: month }, function(data) {
+        var tbody = $('#mostLeastRoomTable tbody');
+        tbody.empty();
+        var labels = [], values = [];
+        data.forEach(function(row) {
+            tbody.append('<tr><td>' + row.tenPhong + '</td><td>' + row.soLanThue + '</td></tr>');
+            labels.push(row.tenPhong);
+            values.push(row.soLanThue);
+        });
+        renderBarChart('mostLeastRoomChart', labels, values, 'Số lần thuê');
+        renderPieChart('mostLeastRoomPieChart', labels, values, 'Tỉ lệ số lần thuê');
+    });
+
+    // Loại phòng thuê nhiều nhất/ít nhất
+    $.get('/Report/GetMostLeastRentedRoomType', { year: year, month: month }, function(data) {
+        var tbody = $('#mostLeastRoomTypeTable tbody');
+        tbody.empty();
+        var labels = [], values = [];
+        data.forEach(function(row) {
+            tbody.append('<tr><td>' + row.loaiPhong + '</td><td>' + row.soLanThue + '</td></tr>');
+            labels.push(row.loaiPhong);
+            values.push(row.soLanThue);
+        });
+        renderBarChart('mostLeastRoomTypeChart', labels, values, 'Số lần thuê');
+        renderPieChart('mostLeastRoomTypePieChart', labels, values, 'Tỉ lệ số lần thuê');
+    });
+
+    // Dịch vụ được chọn nhiều nhất/ít nhất
+    $.get('/Report/GetMostLeastUsedService', { year: year, month: month }, function(data) {
+        var tbody = $('#mostLeastServiceTable tbody');
+        tbody.empty();
+        var labels = [], values = [];
+        data.forEach(function(row) {
+            tbody.append('<tr><td>' + row.tenDichVu + '</td><td>' + row.soLanChon + '</td></tr>');
+            labels.push(row.tenDichVu);
+            values.push(row.soLanChon);
+        });
+        renderBarChart('mostLeastServiceChart', labels, values, 'Số lần chọn');
+        renderPieChart('mostLeastServicePieChart', labels, values, 'Tỉ lệ số lần chọn');
+    });
+}
+
+// Lấy tổng số phòng, loại phòng, dịch vụ
+function loadSummaryBoxes() {
+    $.get('/api/Report/GetTotalCounts', function(data) {
+        $('#totalRoom').text(data.totalRoom);
+        $('#totalRoomType').text(data.totalRoomType);
+        $('#totalService').text(data.totalService);
+    });
+    $.get('/api/Report/GetOccupiedRoomCount', function(data) {
+        $('#occupiedRoom').text(data.occupiedRoomCount);
+    });
+}
+
+function handleChartResize() {
+    document.querySelectorAll('.pie-chart-large').forEach(canvas => {
+        const chart = Chart.getChart(canvas);
+        if (chart) {
+            chart.options.plugins.datalabels.font.size = 15;
+            chart.options.plugins.legend.labels.font.size = 14;
+            chart.update();
+        }
+    });
+}
+window.addEventListener('resize', handleChartResize);
+const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.type === 'attributes') {
+            handleChartResize();
+        }
+    });
+});
+document.querySelectorAll('.pie-chart-container').forEach(container => {
+    observer.observe(container, { 
+        attributes: true,
+        attributeFilter: ['style', 'class'] 
+    });
+});
+$(document).ready(function() {
+    loadYears();
+    $('#yearSelect, #monthSelect').change(loadAllStats);
+    loadSummaryBoxes();
+    setTimeout(handleChartResize, 500);
+});
+</script>

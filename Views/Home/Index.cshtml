@@ -1,32 +1,173 @@
 ﻿@model TaiKhoan
-<link rel="stylesheet" href="~/style/home.css" />
-<div id="main" style="height: 100vh;">
 
-    <div class="container  w-75">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap">
+<link rel="stylesheet" href="~/css/GUIroom.css" />
+
+<div id="main">
+    <div class="container w-75 carousel-container">
         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="4" aria-label="Slide 5"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="4" aria-label="Slide 5"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="5" aria-label="Slide 6"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="6" aria-label="Slide 7"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="7" aria-label="Slide 8"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="8" aria-label="Slide 9"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="9" aria-label="Slide 10"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="10" aria-label="Slide 11"></button>
+                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="11" aria-label="Slide 12"></button>
             </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img width="800" height="600" class="d-block w-100" src="./pictures/hotel1.jpg" alt="First slide">
+                    <img class="d-block w-100" src="~/pictures/Pre.png" alt="Luxury Suite">
+                    <div class="carousel-caption">
+                        <div class="caption-bg special-room">
+                            <h5>Luxury Suite</h5>
+                            <p>Trải nghiệm không gian sang trọng với tầm nhìn tuyệt đẹp</p>
+                            <a href="/room/index" class="btn btn-cta btn-special">
+                                <i class="bi bi-calendar-check me-2"></i>Đặt phòng ngay !
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="carousel-item">
-                    <img width="800" height="600" class="d-block w-100" src="./pictures/hotel2.jpg" alt="Second slide">
+                    <img class="d-block w-100" src="~/pictures/hotel2.jpg" alt="Deluxe Room">
+                    <div class="carousel-caption">
+                        <div class="caption-bg">
+                            <h5>Deluxe Room</h5>
+                            <p>Thư giãn trong không gian ấm cúng và tiện nghi</p>
+                            <a href="/room/index" class="btn btn-cta">
+                                <i class="bi bi-calendar-check me-2"></i>Đặt phòng ngay !
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="carousel-item">
-                    <img width="800" height="600" class="d-block w-100" src="./pictures/hotel3.jpg" alt="Third slide">
+                    <img class="d-block w-100" src="~/pictures/OceanView.jpg    " alt="Ocean View">
+                    <div class="carousel-caption">
+                        <div class="caption-bg">
+                            <h5>Ocean View</h5>
+                            <p>Ngắm nhìn đại dương bao la từ phòng của bạn</p>
+                            <a href="/room/index" class="btn btn-cta">
+                                <i class="bi bi-calendar-check me-2"></i>Đặt phòng ngay !
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="carousel-item">
-                    <img width ="800" height="600" class="d-block w-100" src="./pictures/hotel4.jpg" alt="Third slide">
+                    <img class="d-block w-100" src="~/pictures/hotel3.jpg" alt="Free Pool">
+                    <div class="carousel-caption">
+                        <div class="caption-bg">
+                            <h5>Free Pool</h5>
+                            <p>Thoải mái với các trải nghiệm miễn phí</p>
+                            <a href="/room/index" class="btn btn-cta">
+                                <i class="bi bi-calendar-check me-2"></i>Đặt phòng ngay !
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="carousel-item">
-                    <img width="800" height="600" class="d-block w-100" src="./pictures/Momoshiki.png" alt="Fourth slide">
+                    <img class="d-block w-100" src="~/pictures/fam.png" alt="Family Suite">
+                    <div class="carousel-caption">
+                        <div class="caption-bg">
+                            <h5>Family Suite</h5>
+                            <p>Không gian lý tưởng cho kỳ nghỉ gia đình</p>
+                            <a href="/room/index" class="btn btn-cta">
+                                <i class="bi bi-calendar-check me-2"></i>Đặt phòng ngay !
+                            </a>
+                        </div>
+                    </div>
                 </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="~/pictures/Yasuo.jpg" alt="Special Room">
+                    <div class="carousel-caption">
+                        <div class="caption-bg special-room">
+                            <h5>Special Atmosphere</h5>
+                            <p>Độc đáo và đầy phong cách cho trải nghiệm khác biệt</p>
+                            <a href="/room/index" class="btn btn-cta btn-special">
+                                <i class="bi bi-stars me-2"></i>Đặt phòng ngay !
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="~/pictures/Aatrox_0.jpg" alt="Special Room">
+                    <div class="carousel-caption">
+                        <div class="caption-bg special-room">
+                            <h5>Special Battle</h5>
+                            <p>Cảm nhận sự chết chóc vui vẻ khi tham gia các dịch vụ độc quyền</p>
+                            <a href="/room/index" class="btn btn-cta btn-special">
+                                <i class="bi bi-stars me-2"></i>Chọn phòng và đặt dịch vụ đặc biệt ngay !
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="~/pictures/kayn_rhaastCopy.jpg" alt="Special Room">
+                    <div class="carousel-caption">
+                        <div class="caption-bg special-room">
+                            <h5>Special Battle</h5>
+                            <p>Cảm nhận sự chết chóc vui vẻ khi tham gia các dịch vụ độc quyền</p>
+                            <a href="/room/index" class="btn btn-cta btn-special">
+                                <i class="bi bi-stars me-2"></i>ĐẶT DỊCH VỤ ĐẶC BIỆT NGAY NÀO KID !
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="~/pictures/DichVuTreEm.jpg" alt="Special Room">
+                    <div class="carousel-caption">
+                        <div class="caption-bg special-room">
+                            <h5>Kid Plays</h5>
+                            <p>Đầy đủ các hoạt động vui chơi giải trí cho trẻ nhỏ</p>
+                            <a href="/room/index" class="btn btn-cta btn-special">
+                                <i class="bi bi-stars me-2"></i>PICK ROOM NOW KID !
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-150" src="~/pictures/mechaaatrox.jpg" alt="Special Room">
+                    <div class="carousel-caption">
+                        <div class="caption-bg special-room">
+                            <h5>Special Facilities</h5>
+                            <p>Cơ sở vật chất hiện đại, đậm chất chiến binh</p>
+                            <a href="/room/index" class="btn btn-cta btn-special">
+                                <i class="bi bi-stars me-2"></i>Đặt phòng ngay !
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="~/pictures/roCUoiLacDa2.jpg" alt="Special Room">
+                    <div class="carousel-caption">
+                        <div class="caption-bg special-room">
+                            <h5>Special Services</h5>
+                            <p>Những dịch vụ độc đáo và đầy phong cách cho trải nghiệm khác biệt</p>
+                            <a href="/room/index" class="btn btn-cta btn-special">
+                                <i class="bi bi-stars me-2"></i>Đặt phòng ngay !
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="~/pictures/messicelebrating.jpg" alt="Special Room">
+                    <div class="carousel-caption">
+                        <div class="caption-bg special-room">
+                            <h5>PERFECT EXPERIENCE !</h5>
+                            <p>100% ĐÁNH GIÁ HOÀN HẢO !<br />Từ khách hàng và các chủ tịch</p>
+                            <a href="/room/index" class="btn btn-cta btn-special">
+                                <i class="bi bi-stars me-2"></i>Đặt phòng ngay !
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -37,12 +178,11 @@
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
-
-
     </div>
 
     @await Html.PartialAsync("footer")
 </div>
 
-
-
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+}

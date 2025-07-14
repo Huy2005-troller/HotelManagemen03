@@ -54,6 +54,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUUxVc2VyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/web/hotel mvc/HotelManagementWithASP.NET2/Views/Admin/ThongKeSuDungPhong.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVGhvbmdLZVN1RHVuZ1Bob25nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/web/hotel mvc/HotelManagementWithASP.NET2/Views/BookingHistoryOfUser/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9va2luZ0hpc3RvcnlPZlVzZXJcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

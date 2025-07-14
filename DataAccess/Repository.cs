@@ -535,6 +535,20 @@ namespace HotelManagement.DataAccess
             }
         }
 
+        public IEnumerable<Phong> getPhongByTenPhong(string tenPhong)
+        {
+            if (string.IsNullOrEmpty(tenPhong))
+                return context.Phongs;
+            return context.Phongs.Where(p => p.TenPhong.ToLower().Contains(tenPhong.ToLower()));
+        }
+
+        // Lấy số lượng phòng đang thuê
+        public int GetOccupiedRoomCount()
+        {
+            // Giả sử mã trạng thái phòng đang thuê là "MTT2"
+            return context.Phongs.Count(p => p.MaTrangThai == "MTT2");
+        }
+
 
     }
 }

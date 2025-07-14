@@ -173,10 +173,77 @@ namespace HotelManagement.Controllers
         }
 
         [AdminOrNhanVienAuthentication]
-        public IActionResult QLUser()
+        public IActionResult QLUser(int? year = null)
         {
+            var khachHangs = repo.getKhachHang.ToList();
+            var orderPhongs = repo.getOrderPhongByMaPhong(null).ToList(); // Lấy tất cả OrderPhong
 
-            return View(repo.getKhachHang);
+            // Lấy năm hiện tại nếu chưa chọn
+            int selectedYear = year ?? DateTime.Now.Year;
+
+            // Lấy ngày check-in đầu tiên của mỗi khách (PersonId)
+            var firstCheckin = orderPhongs
+                .GroupBy(o => o.PersonId)
+                .Select(g => new {
+                    PersonId = g.Key,
+                    FirstCheckin = g.Min(x => x.NgayDen)
+                })
+                .Where(x => x.FirstCheckin.HasValue)
+                .ToList();
+
+            // Lọc theo năm và thống kê theo tháng
+            var khachMoiTheoThang = firstCheckin
+                .Where(x => x.FirstCheckin.Value.Year == selectedYear)
+                .GroupBy(x => x.FirstCheckin.Value.Month)
+                .Select(g => new { Thang = g.Key, SoLuong = g.Count() })
+                .ToList();
+
+            // Lấy danh sách các năm có khách mới
+            var years = firstCheckin
+                .Select(x => x.FirstCheckin.Value.Year)
+                .Distinct()
+                .OrderByDescending(y => y)
+                .ToList();
+
+            // Top 10 khách đặt phòng nhiều nhất (thêm tuổi, sdt, giới tính)
+            var topKhach = orderPhongs
+                .GroupBy(o => o.PersonId)
+                .Select(g => new {
+                    PersonId = g.Key,
+                    SoLanDat = g.Count()
+                })
+                .OrderByDescending(x => x.SoLanDat)
+                .Take(10)
+                .Join(khachHangs, x => x.PersonId, k => k.KhachHangNavigation.PersonId, (x, k) => new {
+                    k.KhachHangNavigation.HoTen,
+                    x.PersonId,
+                    x.SoLanDat,
+                    Tuoi = k.KhachHangNavigation.Tuoi,
+                    Sdt = k.KhachHangNavigation.Sdt,
+                    GioiTinh = k.KhachHangNavigation.GioiTinh
+                })
+                .ToList();
+
+            ViewBag.KhachMoiTheoThang = khachMoiTheoThang;
+            ViewBag.TopKhach = topKhach;
+            ViewBag.SelectedYear = selectedYear;
+            ViewBag.Years = years;
+
+            // Tổng tất cả khách hàng (PersonId duy nhất, toàn bộ hệ thống)
+            var tongKhachHang = repo.getPeople
+                .Select(p => p.PersonId)
+                .Distinct()
+                .Count();
+            ViewBag.TongKhachHang = tongKhachHang;
+
+            // Tổng khách hàng mới theo năm (PersonId duy nhất, check-in đầu tiên trong năm)
+            var tongKhachHangMoiNam = firstCheckin
+                .Where(x => x.FirstCheckin.Value.Year == selectedYear)
+                .Count();
+
+            ViewBag.TongKhachHangMoiNam = tongKhachHangMoiNam;
+
+            return View(khachHangs);
         }
 
 

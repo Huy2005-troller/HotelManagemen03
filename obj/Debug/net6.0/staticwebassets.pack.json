@@ -5,6 +5,14 @@
       "PackagePath": "staticwebassets\\HotelManagement.bundle.scp.css"
     },
     {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\css\\GUIroom.css",
+      "PackagePath": "staticwebassets\\css\\GUIroom.css"
+    },
+    {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\css\\foote.css",
+      "PackagePath": "staticwebassets\\css\\foote.css"
+    },
+    {
       "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\css\\print.css",
       "PackagePath": "staticwebassets\\css\\print.css"
     },
@@ -257,6 +265,22 @@
       "PackagePath": "staticwebassets\\pictures\\87932.png"
     },
     {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\Aatrox_0.jpg",
+      "PackagePath": "staticwebassets\\pictures\\Aatrox_0.jpg"
+    },
+    {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\DichVuTreEm.jpg",
+      "PackagePath": "staticwebassets\\pictures\\DichVuTreEm.jpg"
+    },
+    {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\DoiGiaRe.jpg",
+      "PackagePath": "staticwebassets\\pictures\\DoiGiaRe.jpg"
+    },
+    {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\DonGiaRejpg.jpg",
+      "PackagePath": "staticwebassets\\pictures\\DonGiaRejpg.jpg"
+    },
+    {
       "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\HO.jpg",
       "PackagePath": "staticwebassets\\pictures\\HO.jpg"
     },
@@ -265,8 +289,20 @@
       "PackagePath": "staticwebassets\\pictures\\Momoshiki.png"
     },
     {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\OceanView.jpg",
+      "PackagePath": "staticwebassets\\pictures\\OceanView.jpg"
+    },
+    {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\Pre.png",
+      "PackagePath": "staticwebassets\\pictures\\Pre.png"
+    },
+    {
       "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\Ricardo.jpg",
       "PackagePath": "staticwebassets\\pictures\\Ricardo.jpg"
+    },
+    {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\Yasuo.jpg",
+      "PackagePath": "staticwebassets\\pictures\\Yasuo.jpg"
     },
     {
       "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\a1-1436.png",
@@ -277,12 +313,12 @@
       "PackagePath": "staticwebassets\\pictures\\anth.png"
     },
     {
-      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\hinh-anh-ronaldo-khoc.jpg",
-      "PackagePath": "staticwebassets\\pictures\\hinh-anh-ronaldo-khoc.jpg"
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\fam.png",
+      "PackagePath": "staticwebassets\\pictures\\fam.png"
     },
     {
-      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\hotel1.jpg",
-      "PackagePath": "staticwebassets\\pictures\\hotel1.jpg"
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\hinh-anh-ronaldo-khoc.jpg",
+      "PackagePath": "staticwebassets\\pictures\\hinh-anh-ronaldo-khoc.jpg"
     },
     {
       "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\hotel2.jpg",
@@ -297,6 +333,30 @@
       "PackagePath": "staticwebassets\\pictures\\hotel4.jpg"
     },
     {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\kayn_rhaastCopy.jpg",
+      "PackagePath": "staticwebassets\\pictures\\kayn_rhaastCopy.jpg"
+    },
+    {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\mechaaatrox.jpg",
+      "PackagePath": "staticwebassets\\pictures\\mechaaatrox.jpg"
+    },
+    {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\messicelebrating.jpg",
+      "PackagePath": "staticwebassets\\pictures\\messicelebrating.jpg"
+    },
+    {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\phongDoiVip.jpg",
+      "PackagePath": "staticwebassets\\pictures\\phongDoiVip.jpg"
+    },
+    {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\phongDonVip.jpg",
+      "PackagePath": "staticwebassets\\pictures\\phongDonVip.jpg"
+    },
+    {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\phongGiaDinh1.jpg",
+      "PackagePath": "staticwebassets\\pictures\\phongGiaDinh1.jpg"
+    },
+    {
       "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\phongdoi.png",
       "PackagePath": "staticwebassets\\pictures\\phongdoi.png"
     },
@@ -305,12 +365,12 @@
       "PackagePath": "staticwebassets\\pictures\\phongdon.png"
     },
     {
-      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\phonggiadinh.jpg",
-      "PackagePath": "staticwebassets\\pictures\\phonggiadinh.jpg"
-    },
-    {
       "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\phongvip.jpg",
       "PackagePath": "staticwebassets\\pictures\\phongvip.jpg"
+    },
+    {
+      "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\roCUoiLacDa2.jpg",
+      "PackagePath": "staticwebassets\\pictures\\roCUoiLacDa2.jpg"
     },
     {
       "Id": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\wwwroot\\pictures\\sanhok.jpg",

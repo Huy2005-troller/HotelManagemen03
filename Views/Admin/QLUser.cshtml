@@ -1,4 +1,91 @@
 ﻿@model IEnumerable<KhachHang>
+@using Newtonsoft.Json
+
+<!-- Dropdown chọn năm -->
+<form method="get" asp-action="QLUser">
+    <label for="year">Chọn năm:</label>
+    <select name="year" id="year" onchange="this.form.submit()">
+        @foreach (var y in ViewBag.Years)
+        {
+            if (y == ViewBag.SelectedYear)
+            {
+                <option value="@y" selected="selected">@y</option>
+            }
+            else
+            {
+                <option value="@y">@y</option>
+            }
+        }
+    </select>
+</form>
+
+<!-- Biểu đồ khách mới theo tháng -->
+<canvas id="khachMoiChart" width="600" height="250"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var khachMoiData = @Html.Raw(JsonConvert.SerializeObject(ViewBag.KhachMoiTheoThang));
+    var labels = Array.from({length: 12}, (_, i) => 'Tháng ' + (i+1));
+    var data = Array(12).fill(0);
+    khachMoiData.forEach(function(item) {
+        data[item.Thang - 1] = item.SoLuong;
+    });
+
+    var ctx = document.getElementById('khachMoiChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Khách mới theo tháng',
+                data: data,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: false,
+                tension: 0.1
+            }]
+        }
+    });
+</script>
+
+<!-- Bảng top 10 khách đặt phòng nhiều nhất -->
+<h3>Top 10 khách đặt phòng nhiều nhất</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Họ tên</th>
+            <th>Person ID</th>
+            <th>Tuổi</th>
+            <th>Giới tính</th>
+            <th>SĐT</th>
+            <th>Số lần đặt</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int stt = 1;
+            foreach (var k in ViewBag.TopKhach)
+            {
+                <tr>
+                    <td>@(stt++)</td>
+                    <td>@k.HoTen</td>
+                    <td>@k.PersonId</td>
+                    <td>@k.Tuoi</td>
+                    <td>@(k.GioiTinh == 0 ? "Nam" : "Nữ")</td>
+                    <td>@k.Sdt</td>
+                    <td>@k.SoLanDat</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <div class="alert alert-info">Tất cả khách hàng: <b>@ViewBag.TongKhachHang</b></div>
+    </div>
+</div>
+
 <div class="container">
     <h1 class="text-center bg-primary">Quản lý khách hàng</h1>
     <div class="row">

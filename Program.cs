@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using HotelManagement.Services;
 namespace HotelManagement
 {
     public class Program
@@ -33,6 +34,7 @@ namespace HotelManagement
 
 
             builder.Services.AddScoped<IRepository, Repository>();
+            builder.Services.AddHostedService<AutoCheckoutBackgroundService>();
 
             var app = builder.Build();
 

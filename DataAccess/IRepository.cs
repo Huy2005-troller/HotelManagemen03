@@ -123,5 +123,10 @@ namespace HotelManagement.DataAccess
         
         // Thêm method cho đồ hỏng
         bool addHoaDonDoHong(HoaDonDoHong hoaDonDoHong);
+
+        IEnumerable<Phong> getPhongByTenPhong(string tenPhong);
+
+        // Lấy số lượng phòng đang thuê
+        int GetOccupiedRoomCount();
     }
 }
