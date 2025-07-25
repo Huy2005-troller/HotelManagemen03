@@ -414,7 +414,73 @@
         document.querySelectorAll('.submit-form-btn').forEach(btn => {
             btn.addEventListener('click', function () {
                 const formId = this.getAttribute('data-form-id');
-                document.getElementById(formId).submit();
+                const form = document.getElementById(formId);
+                const container = form.closest('.modal-body');
+                let isValid = true;
+                let errorMsg = '';
+
+                // Lấy giá trị các trường
+                const cccdInput = form.querySelector('input[name="cccd"]');
+                const sdtInput = form.querySelector('input[name="sdt"]');
+                const dayInInput = form.querySelector('input[name="ngayden"]');
+                const dayOutInput = form.querySelector('input[name="ngaydi"]');
+
+                // Xóa thông báo lỗi cũ
+                let oldAlert = form.querySelector('.alert.alert-danger');
+                if (oldAlert) oldAlert.remove();
+
+                // Kiểm tra CCCD (nếu có)
+                if (cccdInput && !cccdInput.disabled) {
+                    const cccd = cccdInput.value.trim();
+                    if (!/^\d{12}$/.test(cccd)) {
+                        isValid = false;
+                        errorMsg += 'CCCD phải đúng 12 số!\\n';
+                    }
+                }
+                // Kiểm tra SĐT (nếu có)
+                if (sdtInput && !sdtInput.disabled) {
+                    const sdt = sdtInput.value.trim();
+                    if (!/^\d{10}$/.test(sdt)) {
+                        isValid = false;
+                        errorMsg += 'Số điện thoại phải đúng 10 số!\\n';
+                    }
+                }
+                // Kiểm tra ngày đến/ngày đi
+                if (dayInInput && dayOutInput) {
+                    const today = new Date();
+                    today.setHours(0,0,0,0);
+                    const ngayDen = new Date(dayInInput.value);
+                    const ngayDi = new Date(dayOutInput.value);
+                    if (dayInInput.value) {
+                        if (ngayDen < today) {
+                            isValid = false;
+                            errorMsg += 'Ngày đến không được nhỏ hơn ngày hiện tại!\\n';
+                        }
+                        if (dayOutInput.value && (ngayDen >= ngayDi)) {
+                            isValid = false;
+                            errorMsg += 'Ngày đến phải nhỏ hơn ngày đi!\\n';
+                        }
+                    }
+                }
+                // Kiểm tra tuổi (nếu có)
+                const tuoiInput = form.querySelector('input[name="tuoi"]');
+                if (tuoiInput && !tuoiInput.disabled) {
+                    const tuoi = parseInt(tuoiInput.value.trim(), 10);
+                    if (isNaN(tuoi) || tuoi <= 0) {
+                        isValid = false;
+                        errorMsg += 'Tuổi phải lớn hơn 0!\\n';
+                    }
+                }
+                if (!isValid) {
+                    // Hiển thị thông báo lỗi phía trên form
+                    const alert = document.createElement('div');
+                    alert.className = 'alert alert-danger';
+                    alert.role = 'alert';
+                    alert.innerHTML = errorMsg.replace(/\\n/g, '<br>');
+                    form.prepend(alert);
+                    return;
+                }
+                form.submit();
             });
         });
 

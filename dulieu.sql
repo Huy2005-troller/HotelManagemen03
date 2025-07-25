@@ -1,4 +1,4 @@
-﻿use Hotel
+﻿use Hotel3
 go
 insert into Trang_Thai_Phong values
 ('MTT1',N'Trống'),

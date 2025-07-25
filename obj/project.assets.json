@@ -10741,11 +10741,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\HotelManagement.csproj",
+      "projectUniqueName": "D:\\web\\hotel mvc\\New folder\\HotelManagemen03\\HotelManagement.csproj",
       "projectName": "HotelManagement",
-      "projectPath": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\HotelManagement.csproj",
+      "projectPath": "D:\\web\\hotel mvc\\New folder\\HotelManagemen03\\HotelManagement.csproj",
       "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-      "outputPath": "D:\\web\\hotel mvc\\HotelManagementWithASP.NET2\\obj\\",
+      "outputPath": "D:\\web\\hotel mvc\\New folder\\HotelManagemen03\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
